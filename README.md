@@ -8,10 +8,7 @@ It also contains hassle-free guides and scripts for getting started and managing
 
 * [Create a new node and join the network](guides/new-node.md)
 * [Sync node from the snapshot](guides/sync-node.md) (quickest way to sync blocks).
-* [Sync node from scratch via public sentries](guides/sync-node.md) (better decentralization factor).
 * [Upgrade Node to the latest version](guides/upgrade-node.md)
-* Check current block heigh
-* Check current chain size
 
 
 ## Requirments
