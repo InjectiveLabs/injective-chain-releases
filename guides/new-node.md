@@ -1,8 +1,8 @@
 # Join The Network
 
-To set up a new node and join Equinox testnet, follow the official guide [join the testnet][join-testnet-link]
+To set up a new node and join Injective Canary Chain Mainnet, follow the official guide [join the mainnet][join-mainnet-link]
 
-To set up a new node and join Canary mainenet, follow the official guide [join the mainnet][join-mainnet-link]
+To set up a new node and join Equinox testnet, follow the official guide [join the testnet][join-testnet-link]
 
 If you need help, join our [Dicscord community][discord-community-link]
 
