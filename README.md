@@ -1,8 +1,8 @@
-# Injective chain releases
+# Injective Chain releases
 
-The repository hosts Injective chain releases of binary artifacts.
+The repository hosts Injective Chain releases of binary artifacts.
 
-It also contains hassle-free guides and scripts for getting started and managing Injective chain nodes.
+It also contains hassle-free guides and scripts for getting started and managing Injective Chain nodes.
 
 ### Guides included
 
@@ -47,7 +47,7 @@ For the **mainnet**, find a list of seed nodes matching your release [here][inje
 * [Injective REST API Spec][injective-rest-api-link]
 
 # Get Involved
-Injective protocol  is a community driven project; we welcome all contribution.
+Injective Protocol is a community driven project; we welcome all contribution.
 * Discuss with [Discord community][discord-community-link]
 * Join Injective on [Telegram][telegram-community-link]
 * [Github repositories][injective-github-repo]
