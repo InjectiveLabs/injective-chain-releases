@@ -6,16 +6,15 @@ Follow manual process [here.][sync-guide-link]
 
 Or use automation [sync script](../scripts/README.md)
 
-**NOTE:**  You always have the option to sync your sentry from scratch via public sentries out there for a better decentralization factor.
+**NOTE:**  You always have the option to sync your sentry from scratch via public sentries, which is a more decentralized approach.
 
 # Sync From Scratch 
 
 
-Because of braking changes we made with release 10001 rc7, the sync process is done with
-version 10001 rc6, until halt height block 2045750, then continuous with latest binary version 10001 rc7 to the latest block.
+Because of breaking changes we made with release 10001 rc7, the node should be synced with `injectived`
+version 10001 rc6, until halt height block 2045750. Then the `injectived` binary should be updated to version 10001 rc7 to the latest block.
 
-
-Here is a simple six steps guide on how to sync from scratch
+Here is a simple 6-step guide on how to sync from scratch. 
 
 
 ### Step 1
@@ -28,7 +27,7 @@ cp -rf $HOME/.injectived/config $HOME/.injectived/keyring-file $HOME/injectived-
 ```
 
 ### Step 2
- Get previues release version `10001 rc6`
+ Get the previous release version `10001 rc6`
  ```
  # Make sure that no running injectived processes
  killall injectived &>/dev/null || true
@@ -65,17 +64,17 @@ Sync to halt height block
 injectived start --halt-height 2045750
 ```
 
-When block heigh reachs 2045750, it will exit.
+The node will automatically exit upon reaching block height reachs 2045750. 
 
-**NOTE:** Sync process takes approximately two days until reaches halt height. If you want to run sync as a background process, follow the official guide [using systemd service][using-systemd-guide-link].
+**NOTE:** The sync process takes approximately two days until it reaches halt height. If you want to run sync as a background process, follow the official guide [using systemd service][using-systemd-guide-link].
 **Make sure you update ExecStart commannd** bypassing `--halt-height 2045750` param.
- Otherwise, you will overshoot halt height.
+ Otherwise, you will overshoot the halt height and will have to resync from scratch again.
 
 `ExecStart=/bin/bash -c '/usr/bin/injectived  --halt-height 2045750 --log-level=error start'`
 
 
 ### Step 5 
-From this step, you reached halt height and injectived sync process exited. You can now switch binary to the latest version.
+From this step, given that you've now reached the halt height, you can now switch binary to the latest version.
 
 ```
 # Make sure that no running injectived processes
@@ -101,7 +100,7 @@ injectived version
 ```
 
 ### Step 6
-Continue syncing to the latest block
+Continue syncing to the latest block.
 
 ```
 injectived start
@@ -119,7 +118,7 @@ Start systemd service
 `sudo systemctl start injectived && sudo systemctl enable injectived`
 
 
-Wait until sync finish, and the block heigh should reach the latest chain block. Follow via API
+Wait until the sync finishes, and the block height should reach the latest chain block. Follow via API
 
 ```
 curl localhost:26657/status | grep height
