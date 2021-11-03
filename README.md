@@ -11,7 +11,7 @@ It also contains hassle-free guides and scripts for getting started and managing
 * [Sync node from scratch via public sentries](guides/sync-node.md) (better decentralization factor).
 * [Upgrade Node to the latest version](guides/upgrade-node.md)
 
-## Requirments
+## Requirements
 
 The following requirements are required to run the node natively.
 
