@@ -1,13 +1,14 @@
-# Injective Canary 1 Upgrade Instructions
+# Injective Canonical Chain Upgrade Instructions
 
 The following document describes the necessary steps involved that validators and full node operators
-must take in order to upgrade from `injective-canary-1` to `injective-canary-2`. The Injecive team
+must take in order to upgrade from the Injective Canary Chain to the Canonical Chain. The Injecive team
 will post an official `injective-canary-2` genesis file, but it is recommended that validators
 execute the following instructions in order to verify the resulting genesis file.
 
 There is a strong social consensus around proposal `Injective Canary 2 Upgrade Proposal`
-on `injective-canary-1`. Following proposal #[27](https://hub.injective.network/proposals/TO-BE-DETERMINED)
-This indicates that the upgrade procedure should be performed on `TO-BE-DETERMINED`
+on `injective-canary-1`. Following proposal #[65](https://hub.injective.network/proposals/6)
+This indicates that the upgrade procedure should be performed on block number `TO-BE-DETERMINED`
+
   - [Summary](#summary)
   - [Migrations](#migrations)
   - [Preliminary](#preliminary)
