@@ -1,12 +1,12 @@
 # Injective Canonical Chain Upgrade Instructions
 
 The following document describes the necessary steps involved that validators and full node operators
-must take in order to upgrade from the Injective Canary Chain to the Canonical Chain. The Injecive team
-will post an official `injective-canary-2` genesis file, but it is recommended that validators
-execute the following instructions in order to verify the resulting genesis file.
+must take in order to upgrade from the Injective Canary Chain to the Canonical Chain.
+In case of failed migration via upgrade module and we have to export the genesis, InjectiveLabs team
+will post an official `injective-canonical-chain` genesis file in case upgrade, but it is recommended that validators should do try to export the genesis on their own node to verify the resulting genesis file.
 
-There is a strong social consensus around proposal `Injective Canary 2 Upgrade Proposal`
-on `injective-canary-1`. Following proposal #[65](https://hub.injective.network/proposals/6)
+There is a strong social consensus around proposal `Injective Canonical Chain Upgrade Proposal`
+on `injective-canary-1`. Following proposal #[65](https://hub.injective.network/proposals/65)
 This indicates that the upgrade procedure should be performed on block number `TO-BE-DETERMINED`
 
   - [Summary](#summary)
@@ -20,7 +20,7 @@ This indicates that the upgrade procedure should be performed on block number `T
 
 # Summary
 
-The injective-canary-1 will undergo a scheduled upgrade to injective-canary-2 on `TO-BE-DETERMINED`.
+The injective-canary-1 will undergo a scheduled upgrade to injective-canonical-chain on Monday, November 8th.
 
 The following is a short summary of the upgrade steps:
     1. Vote and wait till your node panic at chosen upgrade height
@@ -31,37 +31,36 @@ The following is a short summary of the upgrade steps:
 Specific instructions for validators are available in [Upgrade Procedure](#upgrade-procedure),
 and specific instructions for full node operators are available in [Guidance for Full Node Operators](#guidance-for-full-node-operators).
 
-Upgrade coordination and support for validators will be available on the #validators-verified channel of the [Injective Discord](TO-BE-DETERMINED).
+Upgrade coordination and support for validators will be available on the #mainnet-validators private channel of the [Injective Discord](https://discord.gg/zryDxdnf).
 
 The network upgrade can take the following potential pathways:
 1. Happy path  
-Validator successfully migrates from injective-canary-1 to injective-canary-2 chain without purging the blockchain history and all validators are up within 1-2 hours of the scheduled upgrade.
+Validators successfully migrate from injective-canary-1 to injective-canonical-chain chain without purging the blockchain history and all validators are up within 1-2 hours of the scheduled upgrade.
 
 1. Not-so-happy path  
-Validators have trouble migrating from injective-canary-1 to injective-canary-2 chain. This could be some consensus breaking changes not covered in upgrade handler, or compatibility issue of the migrated state with new injectived binary, but validators can at least export the genesis.
+Validators have trouble migrating from injective-canary-1 to injective-canonical-chain. This could be some consensus breaking changes not covered in upgrade handler, or compatibility issue of the migrated state with new injectived binary, but validators can at least export the genesis.
 
 1. Abort path  
-In the rare event that the team becomes aware of unnoticed critical issues, Injective team will attempt to patch all the breaking states upgrade and provide another working binary within 36 hours.  
-If the chain is not successfully resumed within 36 hours, the upgrade will be announced as aborted on the #mainnet-validators channel of [Discord](TO-BE-DETERMINED), and validators will need to resume running injective-canary-1 network without any updates or changes. A new governance proposal for the upgrade will need to be issued and voted on by the community.
+In the rare event that the team becomes aware of unnoticed critical issues, Injective team will attempt to patch all the breaking states and provide another official binary within 36 hours.  
+If the chain is not successfully resumed within 36 hours, the upgrade will be announced as aborted on the #mainnet-validators channel of [Discord](https://discord.gg/zryDxdnf), and validators will need to resume running injective-canary-1 network without any updates or changes. A new governance proposal for the upgrade will need to be issued and voted on by the community for the next upgrade.
 
 # Migrations
 
-These chapters contain all the migration guides to update your app and modules to Injective Canary 2.
+These chapters contain all the migration guides to update your app and modules to Injective Canonical Chain.
 
-If you’re running a block explorer, wallet, exchange, validator, relayer, trading API server or any other service (eg. custody provider) that depends upon the Injective Chain, you’ll want to pay attention, because this upgrade will involve substantial changes.
+If you’re hosting a block explorer, wallet, exchange, validator, relayer, trading API server or any other services (eg. custody provider) that depend upon the Injective Chain, you’ll want to pay attention, because this upgrade will involve substantial changes.
 
 ## Preliminary
 
 Many changes have occurred to the Injective go-sdk and the Injectived application since the latest
-major upgrade (`injective-canary-1`). These changes notably consist of many new features,
-protocol changes, and application structural changes that favor developer ergonomics
+major upgrade (`injective-canary-1`). These changes notably consist of many new features, protocol changes, and application structural changes that favor developer ergonomics
 and application development.
 
 1. TO-BE-DETERMINED
 2. TO-BE-DETERMINED
 3. TO-BE-DETERMINED
 
-Validators should expect that at least 16GB of RAM needs to be provisioned to process the first new block on injective-canary-2.
+Validators should expect that at least 16GB of RAM needs to be provisioned to process the first new block on injective-canonical-chain.
 
 ## Major Updates
 
@@ -71,7 +70,7 @@ Some of the biggest changes to take note on when upgrading as a developer or cli
 
 - **Protocol Buffers**: Initially the Cosmos SDK used Amino codecs for nearly all encoding and decoding.
 In this version a major upgrade to Protocol Buffers have been integrated. It is expected that with Protocol Buffers
-applications gain in speed, readability, convinience and interoperability with many programming languages.
+applications gain in speed, readability, convenience and interoperability with many programming languages.
 [Read more](https://github.com/cosmos/cosmos-sdk/blob/master/docs/migrations/app_and_modules.md#protocol-buffers)
 - **CLI**: The CLI and the daemon for a blockchain were seperated in previous versions of the Cosmos SDK. This
 led to a `gaiad` and `gaiacli` binary which were seperated and could be used for different interactions with the
@@ -107,7 +106,7 @@ injective-chain 10001-rc7 release and continue the chain until next upgrade anno
 
 The version/commit hash of Injectived 10002-rc1 release `TO-BE-DETERMINED`: `TO-BE-DETERMINED`
 
-1. Verify you are currently running the correct version (TO-BE-DETERMINED) of _injectived_:
+1. Verify you are currently running the correct version (TO-BE-DETERMINED) of `injectived`:
    ```bash
    $ injectived version
    version: `TO-BE-DETERMINED`
@@ -121,9 +120,9 @@ The version/commit hash of Injectived 10002-rc1 release `TO-BE-DETERMINED`: `TO-
     ```
 
     **NOTE**: It is recommended for validators and operators to take a full data snapshot at the export
-   height before proceeding in case the upgrade does not go as planned or if not enough voting power
-   comes online in a sufficient and agreed upon amount of time. In such a case, the chain will fallback
-   to continue operating `injective-canary-1`. See [Recovery](#recovery) for details on how to proceed.
+    height before proceeding in case the upgrade does not go as planned or if not enough voting power
+    comes online in a sufficient and agreed upon amount of time. In such a case, the chain will fallback
+    to continue operating `injective-canary-1`. See [Recovery](#recovery) for details on how to proceed.
 
 1. Download injective-chain 10002-rc2 release
   ```bash

@@ -2,4 +2,4 @@
 
 This directory contains major upgrade migration instructions.
 
-- [Upgrading from `injective-canary-1` to `injective-canary-2`](injective-canary-2.md)
+- [Upgrading from `injective-canary-1` to `injective-canonical-chain`](injective-canonical-chain.md)
