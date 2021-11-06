@@ -6,7 +6,7 @@ If passed, this proposal would commit the Injective Mainnet to halting the Canar
 
 In case of a failed migration via the upgrade module, the Injective Labs team will post an official `injective-canonical-chain` genesis file, but it is recommended that validators should do try to export the genesis on their own node to verify the resulting genesis file.
 
-Following proposal #[65](https://hub.injective.network/proposals/65)
+Following [proposal #65](https://hub.injective.network/proposals/65)
 This indicates that the upgrade procedure should be performed on block number 4,352,000. 
 
   - [Summary](#summary)
@@ -59,13 +59,11 @@ can be done by backing up the `.injectived` directory.
 It is critically important to backup the `.injectived/data/priv_validator_state.json` file after stopping your injectived process. This file is updated every block as your validator participates in a consensus rounds. It is a critical file needed to prevent double-signing, in case the upgrade fails and the previous chain needs to be restarted.
 
 In the event that the upgrade does not succeed, validators and operators must restore the snapshot and downgrade back to
-Injective Chain 10001-rc7 release and continue the chain until next upgrade announcement.
+[Injective Chain 10001-rc7 release](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.0.1-1635956190) and continue the chain until next upgrade announcement.
 
 ## Upgrade Procedure
 
-The version/commit hash of Injectived 10002-rc1 release `TO-BE-DETERMINED`: `TO-BE-DETERMINED`
-
-1. Verify you are currently running the correct version (TO-BE-DETERMINED) of `injectived`:
+1. Verify you are currently running the correct version (`b174465c`) of `injectived`:
    ```bash
    $ injectived version
    commit: `b174465c`
@@ -87,12 +85,11 @@ The version/commit hash of Injectived 10002-rc1 release `TO-BE-DETERMINED`: `TO-
   wget https://github.com/InjectiveLabs/injective-chain-releases/releases/download/v1.1.0-1636178708/linux-amd64.zip
   ```
 
-4. Verify you are currently running the correct version (TO-BE-DETERMINED) of `injectived` after downloading the 10002-rc1 release:
+4. Verify you are currently running the correct version (`eb018590`) of `injectived` after downloading the 10002-rc1 release:
     ```bash
    $ injectived version
-   version: `dev`
    commit: `eb018590`
-   go: `go1.17`
+   go: `go1.17.2`
    ```
 
 5. Coordinate to restart your injectived with other validators
