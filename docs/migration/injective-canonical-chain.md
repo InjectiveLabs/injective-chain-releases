@@ -20,10 +20,11 @@ This indicates that the upgrade procedure should be performed on block number 4,
 The Injective Canary Chain will undergo a scheduled upgrade to Injective Canonical Chain on Monday, November 8th.
 
 The following is a short summary of the upgrade steps:
-    1. Vote and wait till the node panics at block height 4,352,000.
-    1. Backing up configs, data, and keys used for running the Injective Canary Chain.
-    1. Install the [Injective Chain 10002-rc1 release](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.1.0-1636178708)
-    1. Starting your node with the new injectived binary to fulfill the upgrade.
+
+1. Vote and wait till the node panics at block height 4,352,000.
+2. Backing up configs, data, and keys used for running the Injective Canary Chain.
+3. Install the [Injective Chain 10002-rc1 release](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.1.0-1636178708)
+4. Starting your node with the new injectived binary to fulfill the upgrade.
 
 Upgrade coordination and support for validators will be available on the #mainnet-validators private channel of the [Injective Discord](https://discord.gg/injective).
 
@@ -66,30 +67,31 @@ In the event that the upgrade does not succeed, validators and operators must re
 1. Verify you are currently running the correct version (`b174465c`) of `injectived`:
    ```bash
    $ injectived version
-   commit: `b174465c`
-   go: `go1.16.8`
+   commit: b174465c
+   go: go1.16.8
    ```
 
 2. After the chain has halted, make a backup of your `.injectived` directory
     ```bash
     cp ~/.injectived ./injectived-backup
     ```
-
     **NOTE**: It is recommended for validators and operators to take a full data snapshot at the export
     height before proceeding in case the upgrade does not go as planned or if not enough voting power
     comes online in a sufficient and agreed upon amount of time. In such a case, the chain will fallback
     to continue operating the Canary Chain. See [Recovery](#recovery) for details on how to proceed.
 
-3. Download the injective-chain 10002-rc2 release
+3. Download and install the injective-chain 10002-rc1 release
   ```bash
   wget https://github.com/InjectiveLabs/injective-chain-releases/releases/download/v1.1.0-1636178708/linux-amd64.zip
+  unzip linux-amd64.zip
+  sudo mv injectived /usr/bin
   ```
 
 4. Verify you are currently running the correct version (`eb018590`) of `injectived` after downloading the 10002-rc1 release:
     ```bash
    $ injectived version
-   commit: `eb018590`
-   go: `go1.17.2`
+   commit: eb018590
+   go: go1.17.2
    ```
 
 5. Coordinate to restart your injectived with other validators
