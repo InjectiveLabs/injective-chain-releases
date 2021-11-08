@@ -1,0 +1,354 @@
+version: '3.9'
+
+networks:
+  injective:
+    name: injective
+
+services:
+
+  mongo:
+    container_name: mongo
+    image: mongo:${INJ_MONGO_DB_IMAGE_TAG}
+    restart: always
+    command: mongod --dbpath /data/db --replSet rs0 --port 27017 --bind_ip 0.0.0.0
+    ports:
+      - ${INJ_MONGO_DB_PORT}:${INJ_MONGO_DB_PORT}
+    networks:
+      - injective
+    volumes:
+      - ./volumes/mongo/db:/data/db
+      - ./scripts/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+      - ./volumes/mongo/exchangedb:/exchangedb
+
+  injective-core:
+    container_name: injective-core
+    image: ${INJ_CORE_IMAGE_REPO}:${INJ_IMAGE_TAG}
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      APP_ENV: ${APP_ENV}
+      APP_VERSION: ${APP_VERSION}
+      LOG_BUGSNAG_KEY: c6415788a738d90a88df4da3645f7aa5
+      LOG_BUGSNAG_ENABLED: "true"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        ulimit -n 120000
+        yes 12345678 | injectived \
+        --log-level=warn \
+        --rpc.laddr "tcp://0.0.0.0:26657" \
+        --statsd-address=statsd.injective.dev:8125 \
+        --statsd-enabled=true \
+        start
+    ports:
+      - ${INJ_NETWORK_P2P_PORT}:${INJ_NETWORK_P2P_PORT}
+      - ${INJ_NETWORK_GRPC_PORT}:${INJ_NETWORK_GRPC_PORT}
+      - ${INJ_NETWORK_COSMOS_API_PORT}:${INJ_NETWORK_COSMOS_API_PORT}
+      - ${INJ_NETWORK_COSMOS_GRPC_PORT}:${INJ_NETWORK_COSMOS_GRPC_PORT}
+      - ${INJ_NETWORK_COSMOS_GRPC_WEB_PORT}:${INJ_NETWORK_COSMOS_GRPC_WEB_PORT}
+    deploy:
+      resources:
+        limits:
+          memory: ${INJ_CORE_STACK_RESOURCE_RAM_LIMIT}
+        reservations:
+          memory: ${INJ_CORE_STACK_RESOURCE_RAM_RESEVATION}
+    networks:
+      - injective
+    volumes:
+      - ./volumes/.injectived:/root/.injectived
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://injective-core:26657"]
+        interval: 60s
+        timeout: 5s
+        retries: 5
+        start_period: 1s
+
+  injective-exchange-process:
+    container_name: injective-exchange-process
+    image: ${INJ_EXCHANGE_PROCESS_IMAGE_REPO}:${INJ_IMAGE_TAG}
+    restart: always
+    depends_on:
+      - mongo
+      - injective-core
+    command: ${INJ_EXCHANGE_PROCESS_COMMAND}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      EXCHANGE_LOG_LEVEL: ${LOG_LEVEL}
+      EXCHANGE_ENV: ${APP_ENV}
+      EXCHANGE_SERVICE_WAIT_TIMEOUT: 1m
+      APP_ENV: prod
+      APP_VERSION: fabd0d7
+      LOG_BUGSNAG_KEY: ""
+      LOG_BUGSNAG_ENABLED: "true"
+      EXCHANGE_CHRONOS_BLOCK_OFFSET: 0
+      EXCHANGE_CHRONOS_DATA_PATH: var/data
+      EXCHANGE_CHRONOS_RPC_ADDR: tcp://injective-exchange-process:5500
+      EXCHANGE_DB_MONGO_CONNECTION: mongodb://mongo:27017/?replicaSet=rs0&connect=direct
+      EXCHANGE_DB_MONGO_DBNAME: exchange
+      EXCHANGE_DB_ARCHIVE_EVENTS: "true"
+      EXCHANGE_TENDERMINT_RPC: tcp://injective-core:26657
+      EXCHANGE_COSMOS_GRPC: tcp://injective-core:9900
+      EXCHANGE_COSMOS_CHAIN_ID: ${CHAIN_ID}
+      EXCHANGE_ALCHEMY_ENDPOINT: ${ALCHEMY_ENDPOINT}
+      EXCHANGE_STATSD_PREFIX: exchange-process
+      EXCHANGE_STATSD_ADDR: ""
+      EXCHANGE_STATSD_STUCK_DUR: 5m
+      EXCHANGE_STATSD_MOCKING: "false"
+      EXCHANGE_STATSD_DISABLED: "false"
+    ports:
+      - ${INJ_EXCHANGE_PROCESS_CHRONOS_RPC_PORT}:${INJ_EXCHANGE_PROCESS_CHRONOS_RPC_PORT}
+    deploy:
+      resources:
+        limits:
+          memory: ${INJ_EXCHANGE_PROCESS_RESOURCE_RAM_LIMIT}
+        reservations:
+          memory: ${INJ_EXCHANGE_PROCESS_RESOURCE_RAM_RESERVATION}
+    networks:
+      - injective
+    volumes:
+      - ./volumes/chronos:/apps/data/var/data
+
+  injective-exchange-api:
+    container_name: injective-exchange-api
+    image: ${INJ_EXCHANGE_API_IMAGE_REPO}:${INJ_IMAGE_TAG}
+    restart: always
+    depends_on:
+      - mongo
+      - injective-core
+      - injective-exchange-process
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "Wait chronos API for 10sec."
+        sleep 10
+        injective-exchange api
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      EXCHANGE_LOG_LEVEL: ${LOG_LEVEL}
+      EXCHANGE_ENV: ${APP_ENV}
+      EXCHANGE_SERVICE_WAIT_TIMEOUT: 1m
+      APP_ENV: ${APP_ENV}
+      APP_VERSION: fabd0d7
+      LOG_BUGSNAG_KEY: ""
+      LOG_BUGSNAG_ENABLED: "false"
+      EXPLORER_RPC: tcp://injective-core:26657
+      EXPLORER_EXCHANGE_ENDPOINT: https://dex.binance.org/api/v1
+      EXPLORER_COINGECKO_ENDPOINT: https://api.coingecko.com/api/v3
+      EXCHANGE_CHRONOS_BLOCK_OFFSET: 0
+      EXCHANGE_CHRONOS_DATA_PATH: var/data
+      EXCHANGE_CHRONOS_RPC_ADDR: tcp://injective-exchange-process:5500
+      EXCHANGE_DB_MONGO_CONNECTION: mongodb://mongo:27017/?replicaSet=rs0&connect=direct
+      EXCHANGE_DB_MONGO_DBNAME: exchange
+      EXCHANGE_DB_ARCHIVE_EVENTS: "true"
+      EXCHANGE_TENDERMINT_RPC: tcp://injective-core:26657
+      EXCHANGE_COSMOS_GRPC: tcp://injective-core:9900
+      EXCHANGE_COSMOS_CHAIN_ID: ${CHAIN_ID}
+      EXCHANGE_GRPC_LISTEN_ADDR: 0.0.0.0:9910
+      EXCHANGE_HTTP_LISTEN_ADDR: 0.0.0.0:4444
+      EXCHANGE_HTTP_TLS_CERT: /apps/data/public.crt
+      EXCHANGE_HTTP_TLS_KEY: /apps/data/private.key
+      EXCHANGE_FEE_PAYER_PK: ""
+      EXCHANGE_ALCHEMY_ENDPOINT: ${ALCHEMY_ENDPOINT}
+      EXCHANGE_STATSD_PREFIX: exchange-api
+      EXCHANGE_STATSD_ADDR: ""
+      EXCHANGE_STATSD_STUCK_DUR: 5m
+      EXCHANGE_STATSD_MOCKING: "false"
+      EXCHANGE_STATSD_DISABLED: "true"
+    ports:
+      - ${INJ_EXCHANGE_API_CHRONOS_PORT}:${INJ_EXCHANGE_API_CHRONOS_PORT}
+      - ${INJ_EXCHANGE_GRPC_LISTEN_PORT}:${INJ_EXCHANGE_GRPC_LISTEN_PORT}
+    deploy:
+      resources:
+        limits:
+          memory: ${INJ_EXCHANGE_API_RESOURCE_RAM_LIMIT}
+        reservations:
+          memory: ${INJ_EXCHANGE_API_RESOURCE_RAM_RESERVED}
+    networks:
+      - injective
+    volumes:
+      - ./volumes/chronos:/apps/data/var/data
+      - ./volumes/exchange:/data/exchange
+
+
+  injective-exchange-gateway:
+    container_name: injective-exchange-gateway
+    image: ${INJ_EXCHANGE_GATEWAY_IMAGE_REPO}:${INJ_IMAGE_TAG}
+    restart: always
+    depends_on:
+      - mongo
+      - injective-core
+      - injective-exchange-process
+      - injective-exchange-api
+    environment:
+      EXCHANGE_LOG_LEVEL: ${LOG_LEVEL}
+      EXCHANGE_ENV: ${APP_ENV}
+      EXCHANGE_SERVICE_WAIT_TIMEOUT: 1m
+      APP_ENV: ${APP_ENV}
+      APP_VERSION: fabd0d7
+      LOG_BUGSNAG_KEY: ""
+      LOG_BUGSNAG_ENABLED: "true"
+      EXCHANGE_COSMOS_CHAIN_ID: ${CHAIN_ID}
+      EXCHANGE_COSMOS_GRPC: tcp://injective-core:9900
+      EXCHANGE_TENDERMINT_RPC: tcp://injective-core:26657
+      EXCHANGE_FEE_PAYER_PK: ""
+      EXCHANGE_GRPC_LISTEN_ADDR: 0.0.0.0:9910
+      EXCHANGE_HTTP_LISTEN_ADDR: 0.0.0.0:4444
+      EXCHANGE_HTTP_GATEWAY_LISTEN_ADDR: 0.0.0.0:8810
+      EXCHANGE_HTTP_TLS_CERT: /apps/data/public.crt
+      EXCHANGE_HTTP_TLS_KEY: /apps/data/private.key
+      EXCHANGE_STATSD_PREFIX: exchange-gateway
+      EXCHANGE_STATSD_ADDR: statsd.injective.dev:8125
+      EXCHANGE_STATSD_STUCK_DUR: 5m
+      EXCHANGE_STATSD_MOCKING: "false"
+      EXCHANGE_STATSD_DISABLE: "false"
+    command: ${INJ_EXCHANGE_GATEWAY_COMMAND}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - ${INJ_EXCHANGE_GATEWAY_CHRONOS_PORT_EXPOSED}:${INJ_EXCHANGE_GATEWAY_CHRONOS_PORT}
+      - ${INJ_EXCHANGE_GATEWAY_HTTP_GATEWAY_LISTEN_PORT}:${INJ_EXCHANGE_GATEWAY_HTTP_GATEWAY_LISTEN_PORT}
+      - ${INJ_EXCHANGE_GATEWAY_GRPC_PORT_EXPOSED}:${INJ_EXCHANGE_GATEWAY_GRPC_PORT}
+    networks:
+      - injective
+    volumes:
+      - ./volumes/exchange:/data/exchange
+
+
+  injective-liquidator-bot:
+    container_name: injective-liquidator-bot
+    image: ${INJ_LIQUIDATOR_IMAGE_REPO}:latest
+    restart: always
+    depends_on:
+      - mongo
+      - injective-core
+      - injective-exchange-process
+      - injective-exchange-api
+      - injective-exchange-gateway
+      - injective-trading-bot
+    environment:
+      LIQUIDATOR_ENV: ${APP_ENV}
+      LIQUIDATOR_LOG_LEVEL: ${LOG_LEVEL}
+      LIQUIDATOR_SERVICE_WAIT_TIMEOUT: 1m
+      LIQUIDATOR_COSMOS_CHAIN_ID: ${CHAIN_ID}
+      LIQUIDATOR_COSMOS_GRPC: tcp://injective-core:9900
+      LIQUIDATOR_TENDERMINT_RPC: http://injective-core:26657
+      LIQUIDATOR_COSMOS_GAS_PRICES: 500000000inj
+      LIQUIDATOR_COSMOS_KEYRING: file
+      LIQUIDATOR_COSMOS_KEYRING_DIR:
+      LIQUIDATOR_COSMOS_KEYRING_APP: injectived
+      LIQUIDATOR_COSMOS_FROM:
+      LIQUIDATOR_COSMOS_FROM_PASSPHRASE:
+      LIQUIDATOR_COSMOS_PK: ""
+      LIQUIDATOR_COSMOS_USE_LEDGER: "false"
+      LIQUIDATOR_EXCHANGE_GRPC: tcp://injective-exchange-api:9910
+      LIQUIDATOR_STATSD_PREFIX: liquidator.
+      LIQUIDATOR_STATSD_ADDR: statsd.injective.dev:8125
+      LIQUIDATOR_STATSD_STUCK_DUR: 5m
+      LIQUIDATOR_STATSD_MOCKING: "false"
+      LIQUIDATOR_STATSD_DISABLED: "false"
+    networks:
+      - injective
+
+  injective-trading-bot:
+    container_name: injective-trading-bot
+    image: ${INJ_TRADING_BOT_IMAGE_REPO}:latest
+    restart: always
+    depends_on:
+      - mongo
+      - injective-core
+      - injective-exchange-process
+      - injective-exchange-api
+      - injective-exchange-gateway
+    command:
+      - /bin/sh
+      - -c
+      - |
+        injective-trading-bot start
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      TRADING_ENV: ${APP_ENV}
+      TRADING_LOG_LEVEL: ${LOG_LEVEL}
+      TRADING_SERVICE_WAIT_TIMEOUT: 1m
+      TRADING_COSMOS_CHAIN_ID: ${CHAIN_ID}
+      TRADING_COSMOS_GRPC: tcp://injective-core:9900
+      TRADING_TENDERMINT_RPC: http://injective-core:26657
+      TRADING_COSMOS_GAS_PRICES: 500000000inj
+      TRADING_COSMOS_KEYRING: file
+      TRADING_COSMOS_KEYRING_DIR:
+      TRADING_COSMOS_KEYRING_APP: injectived
+      TRADING_COSMOS_FROM:
+      TRADING_COSMOS_FROM_PASSPHRASE:
+      TRADING_COSMOS_PK:
+      TRADING_COSMOS_USE_LEDGER: "false"
+      TRADING_EXCHANGE_GRPC: tcp://injective-exchange-api:9910
+      TRADING_STATSD_PREFIX: trading.
+      TRADING_STATSD_ADDR: ""
+      TRADING_STATSD_STUCK_DUR: 5m
+      TRADING_STATSD_MOCKING: "false"
+      TRADING_STATSD_DISABLED: "false"
+    networks:
+      - injective
+
+
+  injective-price-oracle:
+    container_name: injective-price-oracle
+    image: ${INJ_PRICE_ORACLE_IMAGE_REPO}:latest
+    restart: always
+    depends_on:
+      - mongo
+      - injective-core
+      - injective-exchange-process
+      - injective-exchange-api
+      - injective-exchange-gateway
+      - injective-trading-bot
+      - injective-liquidator-bot
+    environment:
+      ORACLE_ENV: ${APP_ENV}
+      ORACLE_LOG_LEVEL: ${LOG_LEVEL}
+      APP_VERSION: d92ce97
+      ORACLE_SERVICE_WAIT_TIMEOUT: "1m"
+      ORACLE_COSMOS_CHAIN_ID: ${CHAIN_ID}
+      ORACLE_COSMOS_GRPC: tcp://injective-core:9900
+      ORACLE_TENDERMINT_RPC: http://injective-core:26657
+      ORACLE_COSMOS_GAS_PRICES: 500000000inj
+      ORACLE_COSMOS_KEYRING: file
+      ORACLE_COSMOS_KEYRING_DIR:
+      ORACLE_COSMOS_KEYRING_APP: injectived
+      ORACLE_COSMOS_FROM:
+      ORACLE_COSMOS_FROM_PASSPHRASE:
+      ORACLE_COSMOS_PK: ""
+      ORACLE_COSMOS_USE_LEDGER: "false"
+      ORACLE_EXTERNAL_PRICEFEED_ENABLED: "false"
+      ORACLE_COINBASE_URL: https://api.pro.coinbase.com
+      ORACLE_COINBASE_KEY: ""
+      ORACLE_COINBASE_SECRET: ""
+      ORACLE_COINBASE_PASSPHRASE: ""
+      ORACLE_BAND_ENABLED: "false"
+      ORACLE_BAND_SYMBOLS: BTC,ETH,BNB,DOT,LINK,CAKE,USDT,STX,SUSHI,MATIC,MIR,ANC,ADA,LINA,TRX,UNI,VET,XLM,XRP,YFI,XVS,INDEX,PERP,DPI,BSV,XMR,USDC,DASH,ZEC,ETC,WAVES,EWT,NXM,AMPL,DAI,TUSD,BAND,EGLD,ANT,NMR,PAX,LSK,LRC,HBAR,BAL,RUNE,YFII,LUNA,DCR,SC,ENJ,BUSD,OCEAN,RSR,SXP,BTG,BZRX,SRM,SNT,SOL,CKB,BNT,CRV,MANA,YFV,KAVA,TRB,REP,FTM,TOMO,ONE,WNXM,PAXG,WAN,SUSD,RLC,OXT,RVN,FNX,RENBTC,WBTC,DIA,BTM,IOTX,FET,JST,MCO,KMD,BTS,QKC,YAMV2,UOS,AKRO,HNT,HOT,KAI,OGN,WRX,KDA,ORN,STORJ
+      ORACLE_BAND_URL: https://api-gm-lb.bandchain.org
+      ORACLE_BAND_ASK_COUNT: 16
+      ORACLE_BAND_MIN_COUNT: 10
+      ORACLE_BINANCE_URL: https://api.binance.com/api/v3
+      ORACLE_COINGECKO_URL: https://api.coingecko.com/api/v3
+      ORACLE_IEX_URL: https://cloud-sse.iexapis.com/stable
+      ORACLE_IEX_KEY: ""
+      ORACLE_FTX_URL: https://ftx.com/api
+      ORACLE_YEARN_TOOLS_URL: https://api.yearn.tools
+      ORACLE_YFI_VAULT_ADDRESS: ""
+      ORACLE_STATSD_PREFIX: oracle.
+      ORACLE_STATSD_ADDR: ""
+      ORACLE_STATSD_STUCK_DUR: 5m
+      ORACLE_STATSD_MOCKING: "false"
+      ORACLE_STATSD_DISABLED: "false"
+      LOG_BUGSNAG_ENABLED: "false"
+      LOG_BUGSNAG_KEY: ""
+    networks:
+      - injective
+    volumes:
+      - ./volumes/oracle/keyring-oracle:/root/keyring-oracle
