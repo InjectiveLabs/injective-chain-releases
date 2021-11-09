@@ -228,7 +228,7 @@ services:
       - |
         cd /root/.injectived/peggo/ && echo y | peggo tx register-eth-key && peggo orchestrator $INJ_ADDR:inj
     depends_on:
-      - injective-core0
+      - injective-core
     environment:
       APP_ENV: ${APP_ENV}
       APP_LOG_LEVEL: ${LOG_LEVEL}
