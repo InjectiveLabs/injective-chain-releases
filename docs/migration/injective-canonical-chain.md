@@ -2,12 +2,12 @@
 
 The following document describes the necessary steps involved that validators and full node operators
 must take in order to upgrade Canonical Chain from 10002-rc1 to 10002-rc2. The upgrade will take place via an on-chain software upgrade proposal passed by the Injective Chain governance.
-If passed, this proposal would commit the Injective Mainnet to halting the Canary Chain `injectived` application binary at approximately 14:00 UTC on Nov 15th and starting the application binary for the Injective Canonical Chain.
+If passed, this proposal would commit the Injective Mainnet to halting the Canonical Chain 10002-rc1 `injectived` application binary at approximately 14:00 UTC on Nov 15th and starting the application binary for the Injective Canonical Chain.
 
 In case of a failed migration via the upgrade module, the Injective Labs team will post an official `injective-canonical-chain` genesis file, but it is recommended that validators should do try to export the genesis on their own node to verify the resulting genesis file.
 
 Following [proposal `TO-BE-FILLED`](TO-BE-FILLED)
-This indicates that the upgrade procedure should be performed on block number `TO-BE-FILLED`.
+This indicates that the upgrade procedure should be performed on block number `4594100`.
 
   - [Summary](#summary)
   - [Risks](#risks)
@@ -17,13 +17,13 @@ This indicates that the upgrade procedure should be performed on block number `T
 
 # Summary
 
-The Injective Canary Chain will undergo a scheduled upgrade to Injective Canonical Chain on Monday, November 15th.
+The Injective Canonical Chain 10002-rc1 will undergo a scheduled upgrade to Injective Canonical Chain 10002-rc2 release on Monday, November 15th.
 
 The following is a short summary of the upgrade steps:
 
-1. Vote and wait till the node panics at block height 4,352,000.
+1. Vote and wait till the node panics at block height 4,594,100.
 2. Backing up configs, data, and keys used for running the Injective Canary Chain.
-3. Install the [Injective Chain 10002-rc2 release](TO-BE-FILLED)
+3. Install the [Injective Chain 10002-rc2 release](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.1.1-1636733798)
 4. Starting your node with the new injectived binary to fulfill the upgrade.
 
 Upgrade coordination and support for validators will be available on the #mainnet-validators private channel of the [Injective Discord](https://discord.gg/injective).
@@ -64,10 +64,11 @@ In the event that the upgrade does not succeed, validators and operators must re
 
 ## Upgrade Procedure
 
-1. Verify you are currently running the correct version (`TO-BE-FILLED`) of `injectived`:
+1. Verify you are currently running the correct version (`eb018590`) of `injectived`:
    ```bash
    $ injectived version
-   commit: TO-BE-FILLED
+   Version v1.0.3 (eb018590)
+   Compiled at 20211108-1431 using Go go1.17.3 (amd64)
    ```
 
 2. After the chain has halted, make a backup of your `.injectived` directory
@@ -81,15 +82,16 @@ In the event that the upgrade does not succeed, validators and operators must re
 
 3. Download and install the injective-chain 10002-rc2 release
   ```bash
-  wget `TO-BE-FILLED`
+  wget `https://github.com/InjectiveLabs/injective-chain-releases/releases/download/v1.1.1-1636733798/linux-amd64.zip`
   unzip linux-amd64.zip
   sudo mv injectived /usr/bin
   ```
 
-4. Verify you are currently running the correct version (`TO-BE-FILLED`) of `injectived` after downloading the 10002-rc2 release:
+4. Verify you are currently running the correct version (`096cbe5`) of `injectived` after downloading the 10002-rc2 release:
     ```bash
    $ injectived version
-   commit: TO-BE-FILLED
+   Version dev (096cbe5)
+   Compiled at 20211112-1620 using Go go1.17.2 (amd64)
    ```
 
 5. Coordinate to restart your injectived with other validators
