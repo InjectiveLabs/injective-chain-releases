@@ -81,7 +81,7 @@ In the event that the upgrade does not succeed, validators and operators must re
 
 3. Download and install the Injective Chain 10002-rc2 release
   ```bash
-  wget `https://github.com/InjectiveLabs/injective-chain-releases/releases/download/v1.1.1-1636733798/linux-amd64.zip`
+  wget https://github.com/InjectiveLabs/injective-chain-releases/releases/download/v1.1.1-1636733798/linux-amd64.zip
   unzip linux-amd64.zip
   sudo mv injectived /usr/bin
   ```
