@@ -44,6 +44,7 @@ injectived_set_working_dir() {
 
 injectived_clean_working_dir() {
 	rm -rf $HOME/.injectived-artifacts
+  echo "### Provisioning Finished. Cleaning... ###"
 }
 
 injectived_sync() {

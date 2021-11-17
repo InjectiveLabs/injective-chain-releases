@@ -52,8 +52,6 @@ The most important/required environment variables are
 
 *IMPORTANT:* Setup correct `NETWORK` env, options are `mainnet` or `testnet`.
 
-Service-specific env variables are logically grouped per injective service in [docker-compose.yaml](docker-compose.yaml)
-
 # Running mainnet
 
 ## First Time Setup
