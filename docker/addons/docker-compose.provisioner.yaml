@@ -20,6 +20,7 @@ services:
       MAINNET_CONFIG_LATEST: "10001"
       TEST_NET_CONFIG_LATEST: "staking/40017"
       TESTNET_CONFIG: "testnet-config"
+      VOLUMES_PATH: "/home/ubuntu/volumes"
       SYNC_CORE_SNAPSHOT: "true"
       SYNC_EXCHANGE_SNAPSHOT: "true"
       SYNC_CHRONOS_SNAPSHOT: "true"
