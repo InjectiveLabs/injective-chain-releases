@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+
+  mongo:
+    restart: always
+
+  #main containers
+  injective-core:
+    restart: always
+    logging:
+      driver: journald
+    ports:
+      - ${INJ_NETWORK_P2P_PORT}:${INJ_NETWORK_P2P_PORT}
+      - ${INJ_NETWORK_GRPC_PORT}:${INJ_NETWORK_GRPC_PORT}
+      - ${INJ_NETWORK_COSMOS_API_PORT}:${INJ_NETWORK_COSMOS_API_PORT}
+      - ${INJ_NETWORK_COSMOS_GRPC_PORT}:${INJ_NETWORK_COSMOS_GRPC_PORT}
+      - ${INJ_NETWORK_COSMOS_GRPC_WEB_PORT}:${INJ_NETWORK_COSMOS_GRPC_WEB_PORT}
+
+  injective-exchange-process:
+    restart: always
+    logging:
+      driver: journald
+    ports:
+      - ${INJ_EXCHANGE_PROCESS_CHRONOS_RPC_PORT}:${INJ_EXCHANGE_PROCESS_CHRONOS_RPC_PORT}
+
+  injective-exchange-api:
+    restart: always
+    logging:
+      driver: journald
+    ports:
+      - ${INJ_EXCHANGE_API_CHRONOS_PORT}:${INJ_EXCHANGE_API_CHRONOS_PORT}
+      - ${INJ_EXCHANGE_GRPC_LISTEN_PORT}:${INJ_EXCHANGE_GRPC_LISTEN_PORT}
+
+  injective-exchange-gateway:
+    restart: always
+    logging:
+      driver: journald
+    ports:
+      - ${INJ_EXCHANGE_GATEWAY_CHRONOS_PORT_EXPOSED}:${INJ_EXCHANGE_GATEWAY_CHRONOS_PORT}
+      - ${INJ_EXCHANGE_GATEWAY_HTTP_GATEWAY_LISTEN_PORT}:${INJ_EXCHANGE_GATEWAY_HTTP_GATEWAY_LISTEN_PORT}
+      - ${INJ_EXCHANGE_GATEWAY_GRPC_PORT_EXPOSED}:${INJ_EXCHANGE_GATEWAY_GRPC_PORT}
