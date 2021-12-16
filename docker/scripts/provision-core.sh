@@ -3,7 +3,7 @@ set -e
 
 # Install required tools 
 install_tools() {
-  apt update && apt upgrade
+  apt update && apt -y upgrade
   apt install -y wget jq zip git awscli
 }
 
