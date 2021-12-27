@@ -6,7 +6,7 @@ If passed, this proposal would commit the Injective Mainnet to halting the 10002
 
 In case of a failed migration via the upgrade module, the Injective Labs team will post an official `injective-canonical-chain-3` genesis file, but it is recommended that validators should do try to export the genesis on their own node to verify the resulting genesis file.
 
-Following [proposal <id>](https://hub.injective.network/proposals/<proposal_id>), this indicates that the upgrade procedure should be performed on block number `6159200`.
+Following [proposal 93](https://hub.injective.network/proposals/93), this indicates that the upgrade procedure should be performed on block number `6159200`.
 
 - [Summary](#summary)
 - [Risks](#risks)
