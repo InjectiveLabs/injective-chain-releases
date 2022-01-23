@@ -2,11 +2,11 @@
 
 The following document describes the necessary steps involved that validators and full node operators
 must take in order to upgrade the Injective Chain from 10003-rc1 to 10004-rc1. The upgrade will take place via an on-chain software upgrade proposal passed by the Injective Chain governance.
-If passed, this proposal would commit the Injective Mainnet to halting the 10003-rc1 `injectived` application binary at approximately <13:30 UTC on Jan 25th> and starting the application binary for the 10004-rc1 `injectived` application binary for the upgraded Injective Chain.
+If passed, this proposal would commit the Injective Mainnet to halting the 10003-rc1 `injectived` application binary at approximately 14:00 UTC on Jan 25th 2022 and starting the application binary for the 10004-rc1 `injectived` application binary for the upgraded Injective Chain.
 
 In case of a failed migration via the upgrade module, the Injective Labs team will post an official `injective-canonical-chain-4` genesis file, but it is recommended that validators should do try to export the genesis on their own node to verify the resulting genesis file.
 
-Following [proposal 93](https://hub.injective.network/proposals/93), this indicates that the upgrade procedure should be performed on block number `6159200`.
+Following [proposal 106](https://hub.injective.network/proposals/106), this indicates that the upgrade procedure should be performed on block number `7067700`.
 
 - [Summary](#summary)
 - [Risks](#risks)
