@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #CHAIN sync height
-CHAIN_SYNC_HEIGH=2000000
+CHAIN_SYNC_HEIGH=5000000
 # MSG
 MSG_BACKUP_START="Starting backup..."
 MSG_AWS_CLI="AWS CLI not Installed, please follow the installation guide https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html"
