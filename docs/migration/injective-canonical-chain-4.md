@@ -63,7 +63,7 @@ In the event that the upgrade does not succeed, validators and operators must re
 
 ## Upgrade Procedure
 
-1. Verify you are currently running the correct (pre-upgrade) version (`096cbe5`) of `injectived`:
+1. Verify you are currently running the correct (pre-upgrade) version (`260e5265`) of `injectived`:
    ```bash
    $ injectived version
    Version dev (260e526)
