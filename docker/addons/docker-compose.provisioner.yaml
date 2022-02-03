@@ -18,7 +18,7 @@ services:
       GIT_API_LATEST_RELEASE: "https://api.github.com/repos/InjectiveLabs/injective-chain-releases/releases/latest"
       MAINNET_CONFIG: "mainnet-config"
       MAINNET_CONFIG_LATEST: "10001"
-      TEST_NET_CONFIG_LATEST: "staking/40017"
+      TESTNET_CONFIG_LATEST: "staking/40017"
       TESTNET_CONFIG: "testnet-config"
       VOLUMES_PATH: "/home/ubuntu/volumes"
       SYNC_CORE_SNAPSHOT: "true"
