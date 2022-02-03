@@ -1,7 +1,7 @@
 #!/bin/sh
 
-GIT_TESTNET_TAG="v0.4.17-1640702850"
-GIT_MAINNET_TAG="v1.1.1-1640627705"
+GIT_TESTNET_TAG="v0.4.19-1642706097"
+GIT_MAINNET_TAG="v1.4.0-1642928125"
 GIT_INJ_ORG="https://github.com/InjectiveLabs"
 GIT_NETWORK_CONFIG="mainnet-config"
 GIT_RELEASE_REPO="https://github.com/InjectiveLabs/injective-chain-releases/releases/download/"
@@ -11,7 +11,7 @@ MONIKER=""
 MAIN_CHAIN_ID="injective-1"
 MAINNET_CONFIG="mainnet-config"
 MAINNET_CONFIG_LATEST="10001"
-TEST_NET_CONFIG_LATEST="staking/40014"
+TESTNET_CONFIG_LATEST="staking/40019"
 TESTNET_CONFIG="testnet-config"
 TEST_CHAIN_ID="injective-888"
 NETWORK="mainnet"
