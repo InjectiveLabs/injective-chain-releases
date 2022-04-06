@@ -2,11 +2,11 @@
 
 The following document describes the necessary steps involved that validators and full node operators
 must take in order to upgrade the Injective Chain from 10004-rc1 [patch version 10004-rc1-1645352045](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.4.0-1645352045) to 10005-rc1. The upgrade will take place via an on-chain software upgrade proposal passed by the Injective Chain governance.
-If passed, this proposal would commit the Injective Mainnet to halting the 10004-rc1 `injectived` application binary at approximately <14:00 UTC on Jan 25th 2022> and starting the application binary for the 10005-rc1 `injectived` application binary for the upgraded Injective Chain.
+If passed, this proposal would commit the Injective Mainnet to halting the 10004-rc1 `injectived` application binary at approximately 14:00 UTC on April 11th 2022 and starting the application binary for the 10005-rc1 `injectived` application binary for the upgraded Injective Chain.
 
 In case of a failed migration via the upgrade module, the Injective Labs team will post an official `injective-canonical-chain-5` genesis file, but it is recommended that validators should do try to export the genesis on their own node to verify the resulting genesis file.
 
-Following proposal <proposal_number>, this indicates that the upgrade procedure should be performed on block number `<block_number>`.
+Following proposal <proposal_number>, this indicates that the upgrade procedure should be performed on block number `9614200`.
 
 - [Summary](#summary)
 - [Risks](#risks)
@@ -16,11 +16,11 @@ Following proposal <proposal_number>, this indicates that the upgrade procedure 
 
 # Summary
 
-The Injective Chain 10004-rc1 will undergo a scheduled upgrade to Injective Chain 10005-rc1 release on  **<release_date>**.
+The Injective Chain 10004-rc1 will undergo a scheduled upgrade to Injective Chain 10005-rc1 release on  **14:00 UTC on April 11th 2022**.
 
 The following is a short summary of the upgrade steps:
 
-1. Vote and wait until the node panics at block height <halth_block_height>.
+1. Vote and wait until the node panics at block height 9614200.
 2. Backing up configs, data, and keys used for running the Injective Chain.
 3. Install the [Injective Chain 10005-rc1 release](release_url)
 4. Start your node with the new injectived binary to fulfill the upgrade.
