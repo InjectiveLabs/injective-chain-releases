@@ -1,12 +1,12 @@
 # Injective Chain Upgrade Instructions
 
 The following document describes the necessary steps involved that validators and full node operators
-must take in order to upgrade the Injective Chain from [10005-rc1] (https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.5.0-1649280277) to [10006-rc1](<release-url>). The upgrade will take place via an on-chain software upgrade proposal passed by the Injective Chain governance.
-If passed, this proposal would commit the Injective Mainnet to halting the 10005-rc1 `injectived` application binary at approximately <halth_time> UTC on <halth_date> and starting the application binary for the 10006-rc1 `injectived` application binary for the upgraded Injective Chain.
+must take in order to upgrade the Injective Chain from [10005-rc1] (https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.5.0-1649280277) to [10006-rc1](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.6.0-1656650662). The upgrade will take place via an on-chain software upgrade proposal passed by the Injective Chain governance.
+If passed, this proposal would commit the Injective Mainnet to halting the 10005-rc1 `injectived` application binary at approximately 14:00 UTC UTC on July 5th and starting the application binary for the 10006-rc1 `injectived` application binary for the upgraded Injective Chain.
 
 In case of a failed migration via the upgrade module, the Injective Labs team will post an official `injective-canonical-chain-6` genesis file, but it is recommended that validators should do try to export the genesis on their own node to verify the resulting genesis file.
 
-Following proposal <proposal_number>, this indicates that the upgrade procedure should be performed on block number `<upgrade_block_height>`.
+Following proposal [proposal 159](https://hub.injective.network/proposals/159/), this indicates that the upgrade procedure should be performed on block number `12569420`.
 
 - [Summary](#summary)
 - [Risks](#risks)
@@ -16,13 +16,13 @@ Following proposal <proposal_number>, this indicates that the upgrade procedure 
 
 # Summary
 
-The Injective Chain 10005-rc1 will undergo a scheduled upgrade to Injective Chain 10006-rc1 release on  **<release_time_date>**.
+The Injective Chain 10005-rc1 will undergo a scheduled upgrade to Injective Chain 10006-rc1 release on  **July 5th 2022 14:00 UTC**.
 
 The following is a short summary of the upgrade steps:
 
-1. Vote and wait until the node panics at block height <halt_block_height>.
+1. Vote and wait until the node panics at block height 12569420.
 2. Backing up configs, data, and keys used for running the Injective Chain.
-3. Install the [Injective Chain 10006-rc1 release](<release_url>)
+3. Install the [Injective Chain 10006-rc1 release](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.6.0-1656650662)
 4. Start your node with the new injectived binary to fulfill the upgrade.
 
 Upgrade coordination and support for validators will be available on the #mainnet-validators private channel of the [Injective Discord](https://discord.gg/injective).
@@ -82,18 +82,26 @@ In the event that the upgrade does not succeed, validators and operators must re
 
 3. Download and install the Injective Chain 10006-rc1 release
   ```bash
-  wget <release_url>
+  wget https://github.com/InjectiveLabs/injective-chain-releases/releases/download/v1.6.0-1656650662/linux-amd64.zip
   unzip linux-amd64.zip
-  sudo mv injectived /usr/bin
+  sudo mv injectived peggo /usr/bin
+  sudo mv libwasmvm.x86_64.so /usr/lib
   ```
 
-4. Verify you are currently running the correct new version (`<new_version_hash>`) of `injectived` after downloading the 10006-rc1 release:
+4. Verify you are currently running the correct new version (`ef7f6f7a`) of `injectived` after downloading the 10006-rc1 release:
     ```bash
-   $ injectived version
-   Version dev (<new_version_hash>)
+    $ injectived version
+    Version dev (ef7f6f7a)
+    Compiled at 20220701-0444 using Go go1.18.3 (amd64)
+   ```
+5. Verify you are currently running the correct version (`d7243a9`) of `peggo` after downloading the 10006-rc1 release:
+   ```bash
+   $  peggo version
+   Version dev (d7243a9)
+   Compiled at 20220701-0444 using Go go1.18.3 (amd64)
    ```
 
-5. Coordinate to restart your injectived with other validators
+6. Coordinate to restart your injectived with other validators
    ```bash
    injectived start
    ```
