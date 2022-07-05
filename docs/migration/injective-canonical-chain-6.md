@@ -94,32 +94,25 @@ In the event that the upgrade does not succeed, validators and operators must re
     Version dev (ef7f6f7a)
     Compiled at 20220701-0444 using Go go1.18.3 (amd64)
    ```
-5. Verify you are currently running the correct version (`d7243a9`) of `peggo` after downloading the 10006-rc1 release:
-   ```bash
-   $  peggo version
-   Version dev (d7243a9)
-   Compiled at 20220701-0444 using Go go1.18.3 (amd64)
-   ```
-
-6. Coordinate to restart your injectived with other validators
+5. Coordinate to restart your injectived with other validators
    ```bash
    injectived start
    ```
    The binary will perform the upgrade automatically and continue the next consensus round if everything goes well.
 
-7. Download and install the new Injective Chain 10006-rc1 release for peggo binary
+6. As the above release didn't include the updates to peggo correctly, we created a new release for peggo changes. Download and install the new Injective Chain 10006-rc1 release for peggo binary
   ```bash
   wget https://github.com/InjectiveLabs/injective-chain-releases/releases/download/v1.6.0-1657048292/linux-amd64.zip
   unzip linux-amd64.zip
   sudo mv injectived peggo /usr/bin
 
-8. Verify you are currently running the correct version (`ade8906`) of `peggo` after downloading the 10006-rc1 release:
+7. Verify you are currently running the correct version (`ade8906`) of `peggo` after downloading the 10006-rc1 release:
    ```bash
    $  peggo version
    Version dev (ade8906)
    Compiled at 20220701-0444 using Go go1.18.3 (amd64)
    ```
-9. Start peggo
+8. Start peggo
 ```bash
    peggo start
    ```
