@@ -104,7 +104,7 @@ In the event that the upgrade does not succeed, validators and operators must re
   ```bash
   wget https://github.com/InjectiveLabs/injective-chain-releases/releases/download/v1.6.0-1657048292/linux-amd64.zip
   unzip linux-amd64.zip
-  sudo mv injectived peggo /usr/bin
+  sudo mv peggo /usr/bin
 
 7. Verify you are currently running the correct version (`ade8906`) of `peggo` after downloading the 10006-rc1 release:
    ```bash
