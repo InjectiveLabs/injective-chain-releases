@@ -35,8 +35,8 @@ The following table shows the recommended hardware requirements for the running 
 
 For the **testnet**, find a list of seed nodes in seed.txt in the matching release folder [here][injective-netconf-test]
 
-*Example, for testnet release [0.4.14](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v0.4.14-1632990203)
-you will find the seed node list in `40014/seed.txt`*
+*Example, for testnet release [0.4.19](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v0.4.19-1656563866)
+you will find the seed node list in `70001/seeds.txt`*
 
 For the **mainnet**, find a list of seed nodes matching your release [here][injective-netconf-main]
 
