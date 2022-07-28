@@ -9,7 +9,7 @@ install_tools() {
 
 # It fetchs latest binary and move it to exec path
 get_latest_binary() {
-  wget $GIT_RELEASE_REPO/$GIT_TAG/$RELEASE_ARCH
+  wget $GIT_RELEASE_REPO_$NETWORK/$GIT_TAG/$RELEASE_ARCH
   unzip -o $RELEASE_ARCH
   mv -f injectived peggo injective-exchange /usr/bin
   mv -f libwasmvm.x86_64.so /usr/lib
