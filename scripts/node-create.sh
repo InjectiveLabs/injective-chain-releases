@@ -1,17 +1,19 @@
 #!/bin/sh
 
-GIT_TESTNET_TAG="v0.4.19-1642706097"
+GIT_TESTNET_TAG="v0.4.19-1656563866"
 GIT_MAINNET_TAG="v1.4.0-1642928125"
 GIT_INJ_ORG="https://github.com/InjectiveLabs"
 GIT_NETWORK_CONFIG="mainnet-config"
-GIT_RELEASE_REPO="https://github.com/InjectiveLabs/injective-chain-releases/releases/download/"
+GIT_RELEASE_REPO_MAINNET="https://github.com/InjectiveLabs/injective-chain-releases/releases/download"
+GIT_RELEASE_REPO_TESTNET="https://github.com/InjectiveLabs/testnet/releases/download"
 RELEASE_ARCH="linux-amd64.zip"
-GIT_API_LATEST_RELEASE="https://api.github.com/repos/InjectiveLabs/injective-chain-releases/releases/latest"
+GIT_API_LATEST_RELEASE_MAINNET="https://api.github.com/repos/InjectiveLabs/injective-chain-releases/releases/latest"
+GIT_API_LATEST_RELEASE_TESTNET="https://api.github.com/repos/InjectiveLabs/testnet/releases/latest"
 MONIKER=""
 MAIN_CHAIN_ID="injective-1"
 MAINNET_CONFIG="mainnet-config"
 MAINNET_CONFIG_LATEST="10001"
-TESTNET_CONFIG_LATEST="staking/40019"
+TESTNET_CONFIG_LATEST="corfu/70001"
 TESTNET_CONFIG="testnet-config"
 TEST_CHAIN_ID="injective-888"
 NETWORK="mainnet"
@@ -21,9 +23,10 @@ MSG_ENTER_MONIKER="Please enter moniker. # The argument <moniker> is the custom 
 
 # It fetchs latest binary and move it to exec path
 get_latest_binary() {
-	wget $GIT_RELEASE_REPO/$GIT_TAG/$RELEASE_ARCH
-  	unzip $RELEASE_ARCH
-  	mv -f injectived peggo injective-exchange $HOME/bin
+  wget $GIT_RELEASE_REPO_$NETWORK/$GIT_TAG/$RELEASE_ARCH
+  unzip -o $RELEASE_ARCH
+  mv -f injectived peggo injective-exchange /usr/bin
+  mv -f libwasmvm.x86_64.so /usr/lib
 }
 
 # Init node

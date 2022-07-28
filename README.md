@@ -35,8 +35,8 @@ The following table shows the recommended hardware requirements for the running 
 
 For the **testnet**, find a list of seed nodes in seed.txt in the matching release folder [here][injective-netconf-test]
 
-*Example, for testnet release [0.4.14](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v0.4.14-1632990203)
-you will find the seed node list in `40014/seed.txt`*
+*Example, for testnet release [0.4.19](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v0.4.19-1656563866)
+you will find the seed node list in `70001/seeds.txt`*
 
 For the **mainnet**, find a list of seed nodes matching your release [here][injective-netconf-main]
 
@@ -63,10 +63,10 @@ Injective Protocol is a community driven project; we welcome all contribution.
 [aws-cli-install-link]: https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
 [discord-community-link]: https://discord.com/invite/injective
 [telegram-community-link]: https://t.me/joininjective
-[injective-rest-api-testnet-link]: https://testnet.lcd.injective.dev/swagger/#/
+[injective-rest-api-testnet-link]: https://k8s.testnet.lcd.injective.network/swagger/#/
 [injective-rest-api-mainnet-link]: https://lcd.injective.network/swagger/#/
 [injective-github-repo]: https://github.com/InjectiveLabs
-[injective-docs]: https://chain.injective.network/
+[injective-docs]: https://docs.injective.network/
 [injective-twitter-link]: https://twitter.com/InjectiveLabs
-[injective-netconf-test]: https://github.com/InjectiveLabs/testnet-config/tree/master/staking
+[injective-netconf-test]: https://github.com/InjectiveLabs/testnet-config/tree/master/corfu
 [injective-netconf-main]:https://github.com/InjectiveLabs/mainnet-config
