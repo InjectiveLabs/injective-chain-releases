@@ -9,8 +9,8 @@ services:
     environment:
       TZ: America/New_York
       DEBIAN_FRONTEND: noninteractive
-      GIT_TESTNET_TAG: "v0.4.19-1656563866"
-      GIT_MAINNET_TAG: "v1.4.0-1642928125"
+      GIT_TESTNET_TAG: "v0.4.19-1659094841"
+      GIT_MAINNET_TAG: "v1.6.0-1657048292"
       GIT_INJ_ORG: "https://github.com/InjectiveLabs"
       GIT_NETWORK_CONFIG: "mainnet-config"
       GIT_RELEASE_REPO_MAINNET: "https://github.com/InjectiveLabs/injective-chain-releases/releases/download"
