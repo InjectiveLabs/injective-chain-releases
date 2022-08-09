@@ -9,7 +9,7 @@ install_tools() {
 
 # It fetchs latest binary and move it to exec path
 get_latest_binary() {
-  wget $GIT_RELEASE_REPO/$NETWORK/$GIT_TAG/$RELEASE_ARCH
+  wget $GIT_RELEASE_REPO/$GIT_TAG/$RELEASE_ARCH
   unzip -o $RELEASE_ARCH
   mv -f injectived peggo injective-exchange /usr/bin
   mv -f libwasmvm.x86_64.so /usr/lib
@@ -74,12 +74,14 @@ injectived_start_testnet() {
   export GIT_TAG=$GIT_TESTNET_TAG
   export GIT_NETWORK_CONFIG=$TESTNET_CONFIG
   export NETWORK_CONFIG_PATH=$TESTNET_CONFIG_LATEST
+  export GIT_RELEASE_REPO=$GIT_RELEASE_REPO_TESTNET
 }
 
 injectived_start_mainnet() {
   export GIT_TAG=$GIT_MAINNET_TAG
   export GIT_NETWORK_CONFIG=$MAINNET_CONFIG
   export NETWORK_CONFIG_PATH=$MAINNET_CONFIG_LATEST
+  export GIT_RELEASE_REPO=$GIT_RELEASE_REPO_MAINNET
 }
 
 is_sync_on() {
