@@ -67,8 +67,8 @@ In the event that the upgrade does not succeed, validators and operators must re
    ```
    bash
    $ injectived version
-   Version dev (ef7f6f7a)
-   Compiled at 20220701-0444 using Go go1.18.3 (amd64)
+   Version v1.6 (ef7f6f7a8)
+   Compiled at 20220705-1509 using Go go1.18.3 (amd64)
    ```
 
 2. After the chain has halted, make a backup of your `.injectived` directory
