@@ -5,7 +5,7 @@ If passed, this proposal would commit the Injective Mainnet to halting the 10006
 
 In case of a failed migration via the upgrade module, the Injective Labs team will post an official `injective-canonical-chain-7` genesis file, but it is recommended that validators should do try to export the genesis on their own node to verify the resulting genesis file.
 
-Following proposal [proposal 170](https://hub.injective.network/proposals/170/), this indicates that the upgrade procedure should be performed on block number `14722760`.
+Following proposal [proposal 170](https://hub.injective.network/proposals/170/), this indicates that the upgrade procedure should be performed on block number `14730354`.
 
 - [Summary](#summary)
 - [Risks](#risks)
@@ -19,7 +19,7 @@ The Injective Chain 10006-rc1 will undergo a scheduled upgrade to Injective Chai
 
 The following is a short summary of the upgrade steps:
 
-1. Vote and wait until the node panics at block height 14722759.
+1. Vote and wait until the node panics at block height 14730353.
 2. Backing up configs, data, and keys used for running the Injective Chain.
 3. Install the [Injective Chain 10007 release](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.7.0-1661631860)
 4. Start your node with the new injectived binary to fulfill the upgrade.
