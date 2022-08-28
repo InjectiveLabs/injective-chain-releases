@@ -8,3 +8,5 @@ This directory contains major upgrade migration instructions.
 - [Upgrading from `injective-canonical-chain-3` to `injective-canonical-chain-4`](injective-canonical-chain-4.md)
 - [Upgrading from `injective-canonical-chain-4` to `injective-canonical-chain-4` patch](injective-canonical-chain-4-patch.md)
 - [Upgrading from `injective-canonical-chain-4` patch to `injective-canonical-chain-5`](injective-canonical-chain-5.md)
+- [Upgrading from `injective-canonical-chain-5` patch to `injective-canonical-chain-6`](injective-canonical-chain-6.md)
+- [Upgrading from `injective-canonical-chain-6` patch to `injective-canonical-chain-7`](injective-canonical-chain-7.md)
