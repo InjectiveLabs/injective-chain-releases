@@ -2,7 +2,7 @@
 
 The following document describes the necessary steps involved that validators and full node operators
 must take in order to upgrade the Injective Chain from [10005-rc1] (https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.5.0-1649280277) to [10006-rc1](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.6.0-1656650662). The upgrade will take place via an on-chain software upgrade proposal passed by the Injective Chain governance.
-If passed, this proposal would commit the Injective Mainnet to halting the 10005-rc1 `injectived` application binary at approximately 14:00 UTC UTC on July 5th and starting the application binary for the 10006-rc1 `injectived` application binary for the upgraded Injective Chain.
+If passed, this proposal would commit the Injective Mainnet to halting the 10005-rc1 `injectived` application binary at approximately 14:00 UTC  on July 5th and starting the application binary for the 10006-rc1 `injectived` application binary for the upgraded Injective Chain.
 
 In case of a failed migration via the upgrade module, the Injective Labs team will post an official `injective-canonical-chain-6` genesis file, but it is recommended that validators should do try to export the genesis on their own node to verify the resulting genesis file.
 
