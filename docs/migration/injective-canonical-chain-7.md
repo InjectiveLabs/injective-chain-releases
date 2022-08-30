@@ -64,7 +64,7 @@ In the event that the upgrade does not succeed, validators and operators must re
 
 1. Verify you are currently running the correct (pre-upgrade) version (`ef7f6f7a`) of `injectived`:
    ```bash
-   $ injectived version
+   injectived version
    Version dev (ef7f6f7a)
    Compiled at 20220705-1911 using Go go1.18.3 (amd64)
    ```
@@ -86,11 +86,11 @@ In the event that the upgrade does not succeed, validators and operators must re
   sudo mv libwasmvm.x86_64.so /usr/lib
   ```
 
-4. Verify you are currently running the correct new version (`6a0cae53`) of `injectived` after downloading the 10007 release:
+4. Verify you are currently running the correct new version (`9cbd4234`) of `injectived` after downloading the 10007 release:
     ```bash
-$ injectived version
-   Version dev (6a0cae53)
-   Compiled at 20220827-2024 using Go go1.18.5 (amd64)
+   injectived version
+   Version dev (9cbd4234)
+   Compiled at 20220830-1738 using Go go1.18.5 (amd64)
    ```
 5. Coordinate to restart your injectived with other validators
    ```bash
@@ -100,9 +100,9 @@ $ injectived version
 
 6. Verify you are currently running the correct version (`ade8906`) of `peggo` after downloading the 10007 release:
    ```bash
-$ peggo version
+   peggo version
    Version dev (ade8906)
-   Compiled at 20220827-2024 using Go go1.18.5 (amd64)
+   Compiled at 20220830-1738 using Go go1.18.5 (amd64)
    ```
 8. Start peggo
 ```bash
