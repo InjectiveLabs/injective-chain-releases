@@ -1,6 +1,6 @@
 # Injective Chain Upgrade Instructions
 
-The following document describes the necessary steps involved that validators and full node operators must take in order to upgrade the Injective Chain from [10006-rc1](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.6.0-1656650662) to [10007](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.7.0-1661881062). The upgrade will take place via an on-chain software upgrade proposal passed by the Injective Chain governance.
+The following document describes the necessary steps involved that validators and full node operators must take in order to upgrade the Injective Chain from [10006-rc1](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.6.0-1656650662) to [10007](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.7.0-1662223156). The upgrade will take place via an on-chain software upgrade proposal passed by the Injective Chain governance.
 If passed, this proposal would commit the Injective Mainnet to halting the 10006-rc1 `injectived` application binary at approximately 14:00 UTC on September 1st and starting the application binary for the 10007 `injectived` application binary for the upgraded Injective Chain.
 
 In case of a failed migration via the upgrade module, the Injective Labs team will post an official `injective-canonical-chain-7` genesis file, but it is recommended that validators should do try to export the genesis on their own node to verify the resulting genesis file.
@@ -21,7 +21,7 @@ The following is a short summary of the upgrade steps:
 
 1. Vote and wait until the node panics at block height 14731000.
 2. Backing up configs, data, and keys used for running the Injective Chain.
-3. Install the [Injective Chain 10007 release](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.7.0-1661881062)
+3. Install the [Injective Chain 10007 release](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.7.0-1662223156)
 4. Start your node with the new injectived binary to fulfill the upgrade.
 
 Upgrade coordination and support for validators will be available on the #mainnet-validators private channel of the [Injective Discord](https://discord.gg/injective).
@@ -80,17 +80,17 @@ In the event that the upgrade does not succeed, validators and operators must re
 
 3. Download and install the Injective Chain 10007 release
   ```bash
-   wget https://github.com/InjectiveLabs/injective-chain-releases/releases/download/v1.7.0-1661881062/linux-amd64.zip
+   wget https://github.com/InjectiveLabs/injective-chain-releases/releases/download/v1.7.0-1662223156/linux-amd64.zip
    unzip linux-amd64.zip
    sudo mv injectived peggo /usr/bin
    sudo mv libwasmvm.x86_64.so /usr/lib
   ```
 
-4. Verify you are currently running the correct new version (`9cbd4234`) of `injectived` after downloading the 10007 release:
+4. Verify you are currently running the correct new version (`7d794404`) of `injectived` after downloading the 10007 release:
     ```bash
    injectived version
-   Version dev (9cbd4234)
-   Compiled at 20220830-1738 using Go go1.18.5 (amd64)
+   Version dev (7d794404)
+   Compiled at 20220903-1641 using Go go1.18.5 (amd64)
    ```
 5. Coordinate to restart your injectived with other validators
    ```bash
