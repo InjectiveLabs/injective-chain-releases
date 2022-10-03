@@ -1,24 +1,24 @@
 #!/bin/sh
 
 #CHAIN sync height
-CHAIN_SYNC_HEIGH=5000000
+CHAIN_SYNC_HEIGHT=5000000
 # MSG
 MSG_BACKUP_START="Starting backup..."
-MSG_AWS_CLI="AWS CLI not Installed, please follow the installation guide https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html"
+MSG_AWS_CLI="AWS CLI is not installed, please follow the installation guide https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html"
 MSG_SYNC_START="🔥 Starting sync process...🔥"
-MSG_SYNC_SUCCESS="Syncing Successful, wait for some time to let your node catching up."
-MSG_SYN_FAILD="Sync Faild"
-MSG_NOTE="NOTE: By applying this snapshot, you trust Injective Labs provided blockchain history being genuine."
+MSG_SYNC_SUCCESS="Syncing Successful, wait for some time to let your node catch up."
+MSG_SYN_FAILED="Sync Failed"
+MSG_NOTE="NOTE: By applying this snapshot, you trust that the provided blockchain history by Injective Labs is genuine."
 
 # Turn on debug mode
 #set -x
 
 command_exists() {
-    # Check if command exists and fail otherwise
-    if hash $1 2> /dev/null; then
-        echo $2
-        exit
-    fi
+  # Check if command exists and fail otherwise
+  if hash $1 2>/dev/null; then
+    echo $2
+    exit
+  fi
 }
 
 aws_cli_exists() {
@@ -26,9 +26,9 @@ aws_cli_exists() {
 }
 
 injectived_exists() {
-    command_exists "injectived version" $MSG_NEW_NODE
-    # Stop all running processes
-    killall injectived &>/dev/null || true
+  command_exists "injectived version" $MSG_NEW_NODE
+  # Stop all running processes
+  killall injectived &>/dev/null || true
 }
 
 injectived_backup() {
@@ -39,7 +39,7 @@ injectived_backup() {
 
 injectived_sync() {
   echo $MSG_SYNC_START
-  aws s3 sync --no-sign-request --delete s3://injective-snapshots/mainnet/injectived/data  ~/.injectived/data
+  aws s3 sync --no-sign-request --delete s3://injective-snapshots/mainnet/injectived/data ~/.injectived/data
 }
 
 injectived_restart() {
@@ -51,13 +51,12 @@ injectived_restart() {
 injectived_healthcheck() {
   # check if it's syncing from height > 2000000
   height = curl localhost:26657/status | grep height
-  if height > $CHAIN_SYNC_HEIGH; then
+  if height >$CHAIN_SYNC_HEIGHT; then
     $MSG_SYNC_SUCCESS
   else
-    echo $MSG_SYN_FAILD
+    echo $MSG_SYN_FAILED
   fi
 }
-
 
 injectived_start_sync() {
   # Step1: Check if injectived exits
@@ -74,14 +73,13 @@ injectived_start_sync() {
   injectived_healthcheck
 }
 
-
 injectived_sync_note() {
   echo $MSG_NOTE
   read -p "Continue (Y/N)?" choice
-  case "$choice" in 
-    y|Y ) injectived_start_sync;;
-    n|N ) exit;;
-    * ) echo "Invalid Choice";;
+  case "$choice" in
+  y | Y) injectived_start_sync ;;
+  n | N) exit ;;
+  *) echo "Invalid Choice" ;;
   esac
 }
 
