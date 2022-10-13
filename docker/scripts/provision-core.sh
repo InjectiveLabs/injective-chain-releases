@@ -125,8 +125,8 @@ injectived_start() {
   get_latest_binary
 
   # Provision mainnet or testnet
-  # injectived_init_node
-  # injectived_configure
+  injectived_init_node
+  injectived_configure
   injectived_set_nodes
   injectived_sync
   exchange_sync
