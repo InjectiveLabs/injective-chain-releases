@@ -1,16 +1,14 @@
 version: '3.8'
-
 services:
-
   provisioner:
     container_name: injective-provisioner
     image: ubuntu:latest
-    command:  ["bash", "/home/ubuntu/scripts/provision-core.sh"]
+    command: [ "bash", "/home/ubuntu/scripts/provision-core.sh" ]
     environment:
       TZ: America/New_York
       DEBIAN_FRONTEND: noninteractive
-      GIT_TESTNET_TAG: "v0.4.19-1659094841"
-      GIT_MAINNET_TAG: "v1.6.0-1657048292"
+      GIT_TESTNET_TAG: ${GIT_TESTNET_TAG}
+      GIT_MAINNET_TAG: ${GIT_MAINNET_TAG}
       GIT_INJ_ORG: "https://github.com/InjectiveLabs"
       GIT_NETWORK_CONFIG: "mainnet-config"
       GIT_RELEASE_REPO_MAINNET: "https://github.com/InjectiveLabs/injective-chain-releases/releases/download"
@@ -39,4 +37,3 @@ services:
       - ./volumes:/home/ubuntu/volumes
       - ./scripts:/home/ubuntu/scripts
       - ./env:/home/ubuntu/env
-  
