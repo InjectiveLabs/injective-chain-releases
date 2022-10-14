@@ -4,7 +4,7 @@ set -e
 # Install required tools
 install_tools() {
   apt update && apt -y upgrade
-  apt install -y wget jq zip git awscli
+  apt install -y wget jq zip git awscli liblz4-tool aria2 curl
 }
 
 # It fetchs latest binary and move it to exec path
@@ -53,11 +53,15 @@ injectived_clean_working_dir() {
 }
 
 injectived_sync() {
-  #skip if testnet for now - to add
   if is_sync_on $SYNC_CORE_SNAPSHOT; then
+    echo "Sync injective core snapshot"
     if [ "$NETWORK" == "mainnet" ]; then
-      echo "Sync injective core snapshot"
+      URL=$(curl -L https://quicksync.io/injective.json | jq -r '.[] |select(.file=="injective-1-pruned")|.url')
+      aria2c -x5 $URL
+      lz4 -d $(basename $URL) | tar xf - -C $INJ_HOME
+    else
       aws s3 sync --no-sign-request --delete s3://injective-snapshots/$NETWORK/injectived/data $INJ_HOME/data
+      aws s3 sync --no-sign-request --delete s3://injective-snapshots/$NETWORK/injectived/wasm $INJ_HOME/wasm
     fi
   fi
 }
