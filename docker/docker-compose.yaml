@@ -18,7 +18,7 @@ services:
       - ./volumes/mongo:/data/db
       - ./volumes/mongo/exchangeV2:/exchangeV2
       - ./scripts/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
-  
+
   injective-core:
     container_name: injective-core
     image: "public.ecr.aws/l9h3g6c6/injective-core:${INJ_CORE_IMAGE_VERSION}"
@@ -59,11 +59,11 @@ services:
       - ./volumes/.injectived:/root/.injectived
       - ./scripts:/home/ubuntu/scripts
     healthcheck:
-        test: ["CMD", "curl", "-f", "http://injective-core:26657"]
-        interval: 60s
-        timeout: 5s
-        retries: 5
-        start_period: 1s
+      test: [ "CMD", "curl", "-f", "http://injective-core:26657" ]
+      interval: 60s
+      timeout: 5s
+      retries: 5
+      start_period: 1s
 
   indexer-exchange-import:
     container_name: indexer-exchange-import
@@ -98,8 +98,8 @@ services:
       ## mongo
       INDEXER_DB_MONGO_CONNECTION: ${INDEXER_DB_MONGO_CONNECTION}
       INDEXER_DB_MONGO_DBNAME: ${INDEXER_DB_MONGO_DBNAME}
-      INDEXER_DB_BLOCK_BATCH:
-      ## genesis
+      INDEXER_DB_BLOCK_BATCH: ## genesis
+
       INDEXER_PROTO_ALLOW_UNKNOWN_FIELDS: ${INDEXER_PROTO_ALLOW_UNKNOWN_FIELDS}
       INDEXER_GENESIS_FILE: /root/.injectived/config/genesis.json
     deploy:
@@ -149,8 +149,8 @@ services:
       INDEXER_DB_ARCHIVE_EVENTS: "true"
       INDEXER_DB_MIGRATION_VERSION:
       INDEXER_DB_MIGRATION_HEIGHT:
-      INDEXER_DB_PAUSE_HEIGHT:
-      ## cosmos
+      INDEXER_DB_PAUSE_HEIGHT: ## cosmos
+
       INDEXER_PROTO_ALLOW_UNKNOWN_FIELDS: ${INDEXER_PROTO_ALLOW_UNKNOWN_FIELDS}
       INDEXER_COSMOS_CHAIN_ID: ${CHAIN_ID}
       INDEXER_TENDERMINT_RPC: ${INDEXER_TENDERMINT_RPC}
@@ -204,12 +204,12 @@ services:
       INDEXER_COSMOS_GRPC: ${INDEXER_COSMOS_GRPC}
       INDEXER_COSMOS_CHAIN_ID: ${CHAIN_ID}
       INDEXER_FEE_PAYER_PK: ${EXCHANGE_FEE_PAYER_PK}
-      INDEXER_GAS_ADJUSTMENT_COEF: ${INDEXER_GAS_ADJUSTMENT_COEF} 
+      INDEXER_GAS_ADJUSTMENT_COEF: ${INDEXER_GAS_ADJUSTMENT_COEF}
       ## service
       INDEXER_GRPC_LISTEN_ADDR: 0.0.0.0:9910
       INDEXER_HTTP_LISTEN_ADDR: 0.0.0.0:4444
       INDEXER_HTTP_TLS_CERT: /apps/data/public.crt
-      INDEXER_HTTP_TLS_KEY:  /apps/data/private.key
+      INDEXER_HTTP_TLS_KEY: /apps/data/private.key
       INDEXER_HTTP_HORACLE_ADDR: https://k8s.${NETWORK}.horacle.injective.network/height/latest
       INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD: 10
       INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD: 60
@@ -236,7 +236,7 @@ services:
     hostname: ${HOSTNAME}
     environment:
       # universal
-      INDEXER_LOG_LEVEL: ${LOG_LEVEL} 
+      INDEXER_LOG_LEVEL: ${LOG_LEVEL}
       #${LOG_LEVEL}
       INDEXER_ENV: ${APP_ENV}
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
@@ -324,7 +324,7 @@ services:
       ## service
       INDEXER_HTTP_LISTEN_ADDR: 0.0.0.0:4445
       INDEXER_HTTP_TLS_CERT: /apps/data/public.crt
-      INDEXER_HTTP_TLS_KEY:  /apps/data/private.key
+      INDEXER_HTTP_TLS_KEY: /apps/data/private.key
       INDEXER_HTTP_HORACLE_ADDR: https://k8s.${NETWORK}.horacle.injective.network/height/latest
       INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD: 10
       INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD: 60
@@ -337,3 +337,36 @@ services:
           memory: ${INDEXER_CHRONOS_API_MEMORY_LIMIT}
     networks:
       - injective
+
+  injective-peggo:
+    container_name: injective-peggo
+    image: 981432137740.dkr.ecr.us-east-2.amazonaws.com/peggo:latest
+    command:
+      - /bin/sh
+      - -c
+      - |
+        cd /root/.injectived/peggo/ && echo y | peggo tx register-eth-key && peggo orchestrator $INJ_ADDR:inj
+    depends_on:
+      - injective-core
+    environment:
+      APP_ENV: ${APP_ENV}
+      APP_LOG_LEVEL: ${LOG_LEVEL}
+      SERVICE_WAIT_TIMEOUT: 1m
+      PEGGY_COSMOS_PRIVKEY: ${INJ_PEGGY_COSMOS_PRIVKEY}
+      PEGGY_COSMOS_GRPC: tcp://localhost:9900
+      PEGGY_TENDERMINT_RPC: http://localhost:26657
+      PEGGY_FEE_DENOM: inj
+      INJECTIVED_CHAIN_ID: ${CHAIN_ID}
+      PEGGY_ETH_RPC: http://localhost:8545
+      PEGGY_ETH_PRIVATE_KEY: ${INJ_PEGGO_PEGGY_ETH_PRIVATE_KEY}
+      PEGGY_CONTRACT_ADDRESS: ${INJ_PEGGY_CONTRACT_ADDRESS}
+      INJ_CONTRACT_ADDRESS: ${INJ_CONTRACT_ADDRESS}
+      STATSD_PREFIX: peggo
+      STATSD_ADDR: ${INJ_PEGGO_STATSD_ADDR}
+      STATSD_STUCK_DUR: 5m
+      STATSD_MOCKING: "false"
+      STATSD_DISABLED: ${INJ_PEGGO_STATSD_DISABLED}
+    networks:
+      - injective
+    volumes:
+      - ./volumes/.injectived:/root/.injectived
