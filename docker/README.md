@@ -59,7 +59,7 @@ The most important/required environment variables are
 
 ## First Time Setup
 
-Running an Injective stack for the first time requires provisioning, configuration, and data sync.
+Running an Injective stack for the first time requires provisioning, configuration, and data syncing.
 This is a seamless and fully automated process handled by the injective provisioning container.
 
 
@@ -73,7 +73,7 @@ The provisioning process is now running in the background. You can follow its pr
 docker logs -f injective-provisioner 
 ```
 
-On a good connection, it takes approximately one-two hours to fully sync. This process may take longer for machines with slower internet connections.
+On a good connection, it would take approximately one to two hours to fully sync. This process may take longer for machines with slower internet connections.
 
 After successfully completing the syncing process you should see the message:
 
