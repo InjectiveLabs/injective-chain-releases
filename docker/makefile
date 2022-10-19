@@ -3,9 +3,9 @@ provision-mainnet:
 init-mainnet:
 	docker compose --env-file .env.mainnet.example -f docker-compose.yaml up -d mongo injective-core --build --remove-orphans
 relayer-mainnet:
-	docker compose --env-file .env.mainnet.example -f docker-compose.yaml up -d mongo injective-core indexer-exchange-process indexer-exchange-api indexer-chronos-process indexer-chronos-api --build --remove-orphans
+	docker compose --env-file .env.mainnet.example -f docker-compose.yaml up -d mongo injective-core indexer-eventprovider-process indexer-eventprovider-api indexer-exchange-process indexer-exchange-api indexer-chronos-process indexer-chronos-api --build --remove-orphans
 reload-mainnet:
-	docker compose --env-file .env.mainnet.example -f docker-compose.yaml up -d mongo injective-core indexer-exchange-process indexer-exchange-api indexer-chronos-process indexer-chronos-api --build --remove-orphans
+	docker compose --env-file .env.mainnet.example -f docker-compose.yaml up -d mongo injective-core indexer-eventprovider-process indexer-eventprovider-api indexer-exchange-process indexer-exchange-api indexer-chronos-process indexer-chronos-api --build --remove-orphans
 destroy-mainnet:
 	docker compose --env-file .env.mainnet.example -f docker-compose.yaml down
 
@@ -15,9 +15,9 @@ provision-testnet:
 init-testnet:
 	docker compose --env-file .env.testnet.example -f docker-compose.yaml up -d mongo injective-core --build --remove-orphans
 relayer-testnet:
-	docker compose --env-file .env.testnet.example -f docker-compose.yaml up -d mongo injective-core indexer-exchange-process indexer-exchange-api indexer-chronos-process indexer-chronos-api --build --remove-orphans
+	docker compose --env-file .env.testnet.example -f docker-compose.yaml up -d mongo injective-core indexer-eventprovider-process indexer-eventprovider-api indexer-exchange-process indexer-exchange-api indexer-chronos-process indexer-chronos-api --build --remove-orphans
 reload-testnet:
-	docker compose --env-file .env.testnet.example -f docker-compose.yaml up -d mongo injective-core indexer-exchange-process indexer-exchange-api indexer-chronos-process indexer-chronos-api --build --remove-orphans
+	docker compose --env-file .env.testnet.example -f docker-compose.yaml up -d mongo injective-core indexer-eventprovider-process indexer-eventprovider-api indexer-exchange-process indexer-exchange-api indexer-chronos-process indexer-chronos-api --build --remove-orphans
 destroy-testnet:
 	docker compose --env-file .env.testnet.example -f docker-compose.yaml down
 

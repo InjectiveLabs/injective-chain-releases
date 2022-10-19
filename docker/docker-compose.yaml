@@ -65,6 +65,111 @@ services:
       retries: 5
       start_period: 1s
 
+  indexer-eventprovider-process:
+    container_name: indexer-eventprovider-process
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    restart: always
+    command: injective-indexer eventprovider-process
+    logging:
+      driver: journald
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    hostname: ${HOSTNAME}
+    environment:
+      # universal
+      INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_ENV: ${APP_ENV}
+      INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
+      # bugsnag
+      APP_ENV: ${APP_ENV}
+      APP_VERSION: ${APP_VERSION}
+      LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
+      LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
+      ## statsd
+      INDEXER_STATSD_AGENT: ${INDEXER_STATSD_AGENT}
+      INDEXER_STATSD_PREFIX: indexer-eventprovider-process
+      INDEXER_STATSD_ADDR: host.docker.internal:8125
+      INDEXER_STATSD_STUCK_DUR: 5m
+      INDEXER_STATSD_MOCKING: ${INDEXER_STATSD_MOCKING}
+      INDEXER_STATSD_DISABLED: ${INDEXER_STATSD_DISABLED}
+      ## pprof
+      INDEXER_PPROF_ENABLED: "false"
+      INDEXER_PPROF_ADDR: "0.0.0.0:6060"
+      # cmd specific
+      ## mongo
+      INDEXER_DB_MONGO_CONNECTION: ${INDEXER_DB_MONGO_CONNECTION}
+      INDEXER_DB_MONGO_DBNAME: eventProviderV2
+      INDEXER_DB_BLOCK_BATCH: 50
+      ## cosmos
+      INDEXER_COSMOS_CHAIN_ID: ${CHAIN_ID}
+      INDEXER_TENDERMINT_RPC: ${INDEXER_TENDERMINT_RPC}
+      INDEXER_COSMOS_GRPC: ${INDEXER_COSMOS_GRPC}
+      INDEXER_BLOCK_FETCH_JOBS: 2
+    ports:
+      - 6069:6060
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+    networks:
+      - injective
+
+  indexer-eventprovider-api:
+    container_name: indexer-eventprovider-api
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    restart: always
+    command: injective-indexer eventprovider-api
+    logging:
+      driver: journald
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    hostname: ${HOSTNAME}
+    environment:
+      # universal
+      INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_ENV: ${APP_ENV}
+      INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
+      # bugsnag
+      APP_ENV: ${APP_ENV}
+      APP_VERSION: ${APP_VERSION}
+      LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
+      LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
+      ## statsd
+      INDEXER_STATSD_AGENT: ${INDEXER_STATSD_AGENT}
+      INDEXER_STATSD_PREFIX: indexer-eventprovider-api
+      INDEXER_STATSD_ADDR: host.docker.internal:8125
+      INDEXER_STATSD_STUCK_DUR: 5m
+      INDEXER_STATSD_MOCKING: ${INDEXER_STATSD_MOCKING}
+      INDEXER_STATSD_DISABLED: ${INDEXER_STATSD_DISABLED}
+      ## pprof
+      INDEXER_PPROF_ENABLED: "false"
+      INDEXER_PPROF_ADDR: "0.0.0.0:6060"
+      # cmd specific
+      ## mongo
+      INDEXER_DB_MONGO_CONNECTION: ${INDEXER_DB_MONGO_CONNECTION}
+      INDEXER_DB_MONGO_DBNAME: eventProviderV2
+      ## cosmos
+      INDEXER_PROTO_ALLOW_UNKNOWN_FIELDS: ${INDEXER_PROTO_ALLOW_UNKNOWN_FIELDS}
+      INDEXER_COSMOS_CHAIN_ID: ${CHAIN_ID}
+      INDEXER_TENDERMINT_RPC: ${INDEXER_TENDERMINT_RPC}
+      INDEXER_COSMOS_GRPC: ${INDEXER_COSMOS_GRPC}
+      ## service
+      INDEXER_HTTP_LISTEN_ADDR: 0.0.0.0:4444
+      INDEXER_HTTP_TLS_CERT: /apps/data/public.crt
+      INDEXER_HTTP_TLS_KEY: /apps/data/private.key
+      INDEXER_HTTP_HORACLE_ADDR: https://k8s.${NETWORK}.horacle.injective.network/height/latest
+      INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD: 10
+      INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD: 60
+    ports:
+      - 4443:4444
+      - 6070:6060
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    networks:
+      - injective
+
   indexer-exchange-import:
     container_name: indexer-exchange-import
     image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
@@ -267,7 +372,7 @@ services:
       INDEXER_CHRONOS_DATA_PATH: var/data
       INDEXER_CHRONOS_RPC_ADDR: tcp://0.0.0.0:5500
 
-      INDEXER_CHAIN_START_HEIGHT: 0
+      INDEXER_CHAIN_START_HEIGHT: ${INDEXER_CHAIN_START_HEIGHT}
 
       INDEXER_CHRONOS_RELAYER_ADDRESS: ${INDEXER_CHRONOS_RELAYER_ADDRESS}
       INDEXER_CHRONOS_LEADERBOARD_CROSS_MARKET_IDS: ${INDEXER_CHRONOS_LEADERBOARD_CROSS_MARKET_IDS}
