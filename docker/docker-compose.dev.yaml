@@ -3,10 +3,10 @@ version: '3.9'
 services:
 
   mongo:
-    restart: always
+    restart: on-failure
 
   injective-core:
-    restart: always
+    restart: on-failure
     logging:
       driver: journald
 
@@ -15,31 +15,31 @@ services:
       driver: journald
 
   indexer-exchange-api:
-    restart: always
+    restart: on-failure
     logging:
       driver: journald
 
   indexer-exchange-process:
-    restart: always
+    restart: on-failure
     logging:
       driver: journald
 
   indexer-chronos-api:
-    restart: always
+    restart: on-failure
     logging:
       driver: journald
 
   indexer-chronos-process:
-    restart: always
+    restart: on-failure
     logging:
       driver: journald
 
   indexer-eventprovider-process:
-    restart: always
+    restart: on-failure
     logging:
       driver: journald
 
   indexer-eventprovider-api:
-    restart: always
+    restart: on-failure
     logging:
       driver: journald
