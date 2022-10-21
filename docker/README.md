@@ -83,16 +83,15 @@ This means that you can now run the Injective Relayer or Trading stack.
 
 
 ## Running the Injective Components
-
 ### Injective Relayer Stack ###
 
 This stack contains the Relayer components. It will run:
 
 * Injective Core (injectived)
-* Injective Trading API components (exchange API, exchange Gateway, exchange process)
+* Injective Trading API components (exchange API, exchange process, event provider API, event provider process, chronos API, chronos Process)
 
 ```bash
-docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans mongo injective-core indexer-exchange-process indexer-exchange-api indexer-chronos-process indexer-chronos-api
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans mongo injective-core indexer-exchange-process indexer-exchange-api indexer-chronos-process indexer-chronos-api indexer-eventprovider-process indexer-eventprovider-api
 ```
 
 ### Injective Trading Stack ####
