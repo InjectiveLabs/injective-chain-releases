@@ -96,15 +96,5 @@ Compiled at 20221024-1031 using Go go1.18.5 (amd64)
    ```
    The binary will perform the upgrade automatically and continue the next consensus round if everything goes well.
 
-6. Verify you are currently running the correct version (`ade8906`) of `peggo` after downloading the 10007 release:
-   ```bash
-   peggo version
-   Version dev (ade8906)
-   Compiled at 20220830-1738 using Go go1.18.5 (amd64)
-   ```
-8. Start peggo
-```bash
-   peggo start
-   ```
 ## Notes for DEX relayer providers
 Relayer upgrade will be available after the chain is successfully upgraded as it relies on several other components that work with injectived.
