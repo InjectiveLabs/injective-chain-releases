@@ -24,6 +24,7 @@ services:
       SYNC_CORE_SNAPSHOT: "true"
       SYNC_EXCHANGE_SNAPSHOT: "true"
       SYNC_CHRONOS_SNAPSHOT: "true"
+      SYNC_EVENT_PROVIDER_SNAPSHOT: "true"
       INJ_HOME: /home/ubuntu/volumes/.injectived
       NETWORK: ${NETWORK}
       APP_VERSION: ${APP_VERSION}

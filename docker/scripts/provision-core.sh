@@ -66,14 +66,17 @@ injectived_sync() {
   fi
 }
 
+event_provider_sync() {
+  if is_sync_on $SYNC_EVENT_PROVIDER_SNAPSHOT; then
+    echo "Sync exchange snapshot"
+    aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/mongo/eventProviderV2 $VOLUMES_PATH/mongo/eventProviderV2
+  fi
+}
+
 exchange_sync() {
   if is_sync_on $SYNC_EXCHANGE_SNAPSHOT; then
     echo "Sync exchange snapshot"
-    if [ "$NETWORK" = "mainnet" ]; then
-      aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/mongo/exchangeV2 $VOLUMES_PATH/mongo/exchangeV2
-    else
-      aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/exchange/exchangeV2 $VOLUMES_PATH/mongo/exchangeV2
-    fi
+    aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/mongo/exchangeV2 $VOLUMES_PATH/mongo/exchangeV2
   fi
 }
 
@@ -133,6 +136,7 @@ injectived_start() {
   injectived_configure
   injectived_set_nodes
   injectived_sync
+  event_provider_sync
   exchange_sync
   chronos_sync
   injectived_clean_working_dir
