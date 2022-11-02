@@ -44,13 +44,13 @@ The most important/required environment variables are
 
 | NAME         | OPTIONS                 | DEFAULT |
 | -------------| ----------------------|---------|
-| NETWORK      | mainnet, tesnet       | mainnet |
+| NETWORK      | mainnet, testnet       | mainnet |
 | APP_ENV      | prod/staging          | prod    |
 | APP_VERSION  | vx.x.x          | v1.7.1    |
 | INJ_IMAGE_TAG| x.x.x            | 1.7.1    |
 | LOG_LEVEL    | error/warn/info/debug | info    |
 | CHAIN_ID     | injective-1, injective-888 | injective-1 |
-|
+| INDEXER_COSMOS_TLS_ENABLED | "false","true"| "false"|
 
 
 *IMPORTANT:* Setup correct `NETWORK` env, options are `mainnet` or `testnet`.
@@ -83,17 +83,42 @@ This means that you can now run the Injective Relayer or Trading stack.
 
 
 ## Running the Injective Components
+### Injective Core and MongoDB ###
+```bash
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans mongo injective-core
+```
+To check if the chain has fully synced by running this command:
+```bash
+curl localhost:26657/status | grep -E "height|catching" 
+```
+Once the chain sync finished you should see `"catching_up": false` in the response
+
+To check the progress of the event provider and exchange database sync run
+```bash
+mongosh exchangeV2 --eval "db.system.find().pretty()"
+mongosh eventProviderV2 --eval "db.raw_blocks.countDocuments()"
+```
 ### Injective Relayer Stack ###
 
 This stack contains the Relayer components. It will run:
-
-* Injective Core (injectived)
 * Injective Trading API components (exchange API, exchange process, event provider API, event provider process, chronos API, chronos Process)
 
+First run the the event provider
 ```bash
-docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans mongo injective-core indexer-exchange-process indexer-exchange-api indexer-chronos-process indexer-chronos-api indexer-eventprovider-process indexer-eventprovider-api
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans indexer-eventprovider-process indexer-eventprovider-api
 ```
-
+Wait until the event provider has finished syncing. You can check its progress and see if it has completed syncing by running:
+```bash
+sudo docker logs indexer-eventprovider-process | grep "initial sync completed"
+```
+Now you can run the rest of the Relayer stack
+```bash
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans indexer-exchange-process indexer-exchange-api indexer-chronos-process indexer-chronos-api
+```
+Wait until the event provider has finished syncing. You can check its progress and see if it has completed syncing by running the command below. Replace $SERVICE_PROCESS with `indexer-exchange-process` or `indexer-chronos-process`
+```bash
+docker logs $SERVICE_PROCESS | grep "initial sync completed"
+```
 ### Injective Trading Stack ####
 
 This stack contains additional trading components. It will run:
@@ -145,8 +170,11 @@ Initialize `injective-core` and the `Mongo` database
 ```bash
 make init-$NETWORK
 ```
-
-## Initialize the Relayer Components
+## Initialize the Event Provider
+```bash
+make event-provider-$NETWORK
+```
+## Initialize the rest of the Relayer Components
 ```bash
 make relayer-$NETWORK
 ```
@@ -154,7 +182,7 @@ make relayer-$NETWORK
 ## Follow Component Logs
 To follow the logs of a running service/component, use the command:
 ```bash
-# Where component = core, mongo, chronos-api, chronos-process, exchange-api, exchange-process
+# Where component = core, mongo, chronos-api, chronos-process, exchange-api, exchange-process, eventprovider-process, eventprovider-api
 make follow-$COMPONENT
 
 # Example for viewing logs for the exchange-api
