@@ -96,7 +96,7 @@ Once the chain sync finished you should see `"catching_up": false` in the respon
 To check the progress of the event provider and exchange database sync run
 ```bash
 mongosh exchangeV2 --eval "db.system.find().pretty()"
-mongosh eventProviderV2 --eval "db.raw_blocks.countDocuments()"
+mongosh eventProviderV2 --eval "db.system.find().pretty()"
 ```
 ### Injective Relayer Stack ###
 
