@@ -37,7 +37,7 @@ services:
       - |
         ulimit -n 120000
         yes 12345678 | injectived \
-        --log-level=warn \
+        --log-level=${LOG_LEVEL} \
         --rpc.laddr "tcp://0.0.0.0:26657" \
         --statsd-address=statsd.injective.dev:8125 \
         --statsd-enabled=true \
