@@ -1,10 +1,10 @@
 #!/bin/sh
 set -e
 
-# Install required tools 
+# Install required tools
 install_tools() {
   apt update && apt -y upgrade
-  apt install -y wget jq zip git awscli
+  apt install -y wget jq zip git awscli liblz4-tool aria2 curl
 }
 
 # It fetchs latest binary and move it to exec path
@@ -24,10 +24,14 @@ injectived_configure() {
   git clone $GIT_INJ_ORG/$GIT_NETWORK_CONFIG
 
   # copy genesis file to config directory
-  cp -f $GIT_NETWORK_CONFIG/$NETWORK_CONFIG_PATH/genesis.json $INJ_HOME/config/genesis.json
+  if [ "$NETWORK" = "testnet" ]; then
+    aws s3 cp s3://injective-snapshots/testnet/genesis.json $INJ_HOME/config/genesis.json --no-sign-request
+  else
+    cp -f $GIT_NETWORK_CONFIG/$NETWORK_CONFIG_PATH/genesis.json $INJ_HOME/config/genesis.json
+  fi
 
   # copy config file to config directory
-  cp -f $GIT_NETWORK_CONFIG/$NETWORK_CONFIG_PATH/app.toml  $INJ_HOME/config/app.toml
+  cp -f $GIT_NETWORK_CONFIG/$NETWORK_CONFIG_PATH/app.toml $INJ_HOME/config/app.toml
 }
 
 # Seed config with seeds node list
@@ -51,14 +55,28 @@ injectived_clean_working_dir() {
 injectived_sync() {
   if is_sync_on $SYNC_CORE_SNAPSHOT; then
     echo "Sync injective core snapshot"
-    aws s3 sync --no-sign-request --delete s3://injective-snapshots/$NETWORK/injectived/data $INJ_HOME/data
+    if [ "$NETWORK" == "mainnet" ]; then
+      URL=$(curl -L https://quicksync.io/injective.json | jq -r '.[] |select(.file=="injective-1-pruned")|.url')
+      aria2c -x5 $URL
+      lz4 -d $(basename $URL) | tar xf - -C $INJ_HOME
+    else
+      aws s3 sync --no-sign-request --delete s3://injective-snapshots/$NETWORK/injectived/data $INJ_HOME/data
+      aws s3 sync --no-sign-request --delete s3://injective-snapshots/$NETWORK/injectived/wasm $INJ_HOME/wasm
+    fi
+  fi
+}
+
+event_provider_sync() {
+  if is_sync_on $SYNC_EVENT_PROVIDER_SNAPSHOT; then
+    echo "Sync exchange snapshot"
+    aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/mongo/eventProviderV2 $VOLUMES_PATH/mongo/eventProviderV2
   fi
 }
 
 exchange_sync() {
   if is_sync_on $SYNC_EXCHANGE_SNAPSHOT; then
     echo "Sync exchange snapshot"
-    aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/mongo/exchangedb $VOLUMES_PATH/mongo/exchangedb
+    aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/mongo/exchangeV2 $VOLUMES_PATH/mongo/exchangeV2
   fi
 }
 
@@ -67,8 +85,7 @@ chronos_sync() {
     echo "Sync chronos snapshot"
     aws s3 --no-sign-request sync --delete s3://injective-snapshots/$NETWORK/chronos $VOLUMES_PATH/chronos
   fi
-  }
-
+}
 
 injectived_start_testnet() {
   export GIT_TAG=$GIT_TESTNET_TAG
@@ -105,7 +122,7 @@ injectived_start() {
   elif [ "$NETWORK" = "local" ]; then
     echo "Provisioning local net should be done manually. Exiting"
     exit 1
-  else 
+  else
     echo "NETWORK env not set, exiting"
     exit 1
   fi
@@ -119,6 +136,7 @@ injectived_start() {
   injectived_configure
   injectived_set_nodes
   injectived_sync
+  event_provider_sync
   exchange_sync
   chronos_sync
   injectived_clean_working_dir

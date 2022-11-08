@@ -1,13 +1,13 @@
 # Injective Network
 
-Following those instructions, you will run dockerized [Injective Chain Components on mainnet](#running-mainnet).
+These instructions will guide you in running a dockerized version of the Injective Chain Components on [mainnet](#configure-environment) or [testnet](#configure-environment).
 
 * Injective Chain Node
 * Relayer
 * Trading API components (Market makers)
 
 
-# Prerequests
+# Prerequisites
 
 **Hardware Requirments**
 
@@ -20,20 +20,23 @@ Following those instructions, you will run dockerized [Injective Chain Component
 
 **Software Requirments**
 
-* [Docker Version 20.X.X][get-docker-link]
-* [docker-compose version 1.29.X][get-compose-link]
-* [Git][get-git-link]
+* [Docker Version 20.X.X](get-docker-link)
+* [docker compose version 2.11.X](get-compose-link)
+* [Git](get-git-link)
 
 # Getting Started
 
-NOTE: All commands are executed from the current path level, a `docker` folder.
+NOTE: All commands are executed from the current path level, the `docker` directory.
 
 
 ## Configure Environment
 
- Network-related env variables are defined in `.env` file. There is a `.env.example` that you can copy and use as a starting point.
+ Network-related environment variables are defined in the `.env.$NETWORK.example` files for each of the networks.
 
-`cp .env.example .env`
+```bash
+# Where $NETWORK is either `mainnet` or `testnet`
+cp .env.$NETWORK.example .env
+```
 
 Edit `.env` file.
 
@@ -41,53 +44,81 @@ The most important/required environment variables are
 
 | NAME         | OPTIONS                 | DEFAULT |
 | -------------| ----------------------|---------|
-| NETWORK      | mainnet, tesnet       | mainnet |
+| NETWORK      | mainnet, testnet       | mainnet |
 | APP_ENV      | prod/staging          | prod    |
-| APP_VERSION  | prod/staging          | prod    |
-| INJ_IMAGE_TAG| prod/local            | prod    |
+| APP_VERSION  | vx.x.x          | v1.7.1    |
+| INJ_IMAGE_TAG| x.x.x            | 1.7.1    |
 | LOG_LEVEL    | error/warn/info/debug | info    |
 | CHAIN_ID     | injective-1, injective-888 | injective-1 |
-|
+| INDEXER_COSMOS_TLS_ENABLED | "false","true"| "false"|
 
 
 *IMPORTANT:* Setup correct `NETWORK` env, options are `mainnet` or `testnet`.
 
-# Running mainnet
+# Running the Setup
 
 ## First Time Setup
 
-Running an Injective stack for the first time requires provisioning, configuration, and data sync.
-This process is seamless and fully automated, thanks to the injective provisioning container.
+Running an Injective stack for the first time requires provisioning, configuration, and data syncing.
+This is a seamless and fully automated process handled by the injective provisioning container.
 
 
+```bash
+docker compose -f docker-compose.yaml -f addons/docker-compose.provisioner.yaml up -d provisioner
 ```
- docker-compose -f docker-compose.yaml -f addons/docker-compose.provisioner.yaml up -d provisioner
+
+The provisioning process is now running in the background. You can follow its progress by using the command:
+
+```bash
+docker logs -f injective-provisioner 
 ```
 
-From now on, the provisioning process in running in the background, you can follow with
+On a good connection, it would take approximately one to two hours to fully sync. This process may take longer for machines with slower internet connections.
 
-`docker logs -f injective-provisioner`
-
-It takes approximately one-two hours for full sync (depending on the internet connection also). After successful sync, the container will exit, and you will see the message.
+After successfully completing the syncing process you should see the message:
 
 `### Successful Provisioning ###`
 
-From now on, you are ready to run Injective components.
+This means that you can now run the Injective Relayer or Trading stack.
 
 
-## Running Components
+## Running the Injective Components
+### Injective Core and MongoDB ###
+```bash
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans mongo injective-core
+```
+To check if the chain has fully synced by running this command:
+```bash
+curl localhost:26657/status | grep -E "height|catching" 
+```
+Once the chain sync finished you should see `"catching_up": false` in the response
 
+To check the progress of the event provider and exchange database sync run
+```bash
+mongosh exchangeV2 --eval "db.system.find().pretty()"
+mongosh eventProviderV2 --eval "db.system.find().pretty()"
+```
 ### Injective Relayer Stack ###
 
-This stack contains Relayer components. It will run
+This stack contains the Relayer components. It will run:
+* Injective Trading API components (exchange API, exchange process, event provider API, event provider process, chronos API, chronos Process)
 
-* Injective Core (injectived)
-* Injective Trading API components (exchange API, exchange Gateway, exchange process)
-
+First run the the event provider
+```bash
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans indexer-eventprovider-process indexer-eventprovider-api
 ```
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans mongo injective-core injective-exchange-process injective-exchange-api injective-exchange-gateway
+Wait until the event provider has finished syncing. You can check its progress and see if it has completed syncing by running:
+```bash
+sudo docker logs indexer-eventprovider-process | grep "initial sync completed"
 ```
-
+Now you can run the rest of the Relayer stack
+```bash
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans indexer-exchange-process indexer-exchange-api indexer-chronos-process indexer-chronos-api
+```
+Wait until the event provider has finished syncing. You can check its progress and see if it has completed syncing by running the command below. Replace $SERVICE_PROCESS with `indexer-exchange-process` or `indexer-chronos-process`
+```bash
+docker logs $SERVICE_PROCESS | grep "initial sync completed"
+```
 ### Injective Trading Stack ####
 
 This stack contains additional trading components. It will run:
@@ -95,37 +126,73 @@ This stack contains additional trading components. It will run:
 * Injective Core (injectived)
 * Injective Trading API components (exchange API, exchange Gateway, exchange process, trading bot, liquidator bot, price oracle)
 
-```
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans
+```bash
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans
 ```
 
 ## Check logs
 
 ```
-docker-compose -f logs
+docker compose -f logs
 ```
 
 ## Restart the Network
 
 ```
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml restart
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml restart
 ```
 
 ## Stop the Network
 
 ```
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml stop
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml stop
 ```
 
-## Remove all components and data
-
-**NOTE** All data will be erased, and you will lose the whole setup, which will require running everything from scratch for the first time.
-Use this command **ONLY** when you want to nuke the whole setup.
+## Down all the containers and delete the network
 
 ```
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml down
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml down
 ```
 
+# Using the Makefile
+Replace `$NETWORK` with either `mainnet` or `testnet` when running these commands
+## Edit the environment variables
+The makefile references the `.env.$NETWORK.example` files. Edit these files before proceeding to the next step.
+## Initial setup
+Run the command below to provision, configure and sync your setup.
+
+```bash
+make provision-$NETWORK
+```
+
+## Initialize the Injective Core and the Mongo Database
+Initialize `injective-core` and the `Mongo` database
+```bash
+make init-$NETWORK
+```
+## Initialize the Event Provider
+```bash
+make event-provider-$NETWORK
+```
+## Initialize the rest of the Relayer Components
+```bash
+make relayer-$NETWORK
+```
+
+## Follow Component Logs
+To follow the logs of a running service/component, use the command:
+```bash
+# Where component = core, mongo, chronos-api, chronos-process, exchange-api, exchange-process, eventprovider-process, eventprovider-api
+make follow-$COMPONENT
+
+# Example for viewing logs for the exchange-api
+make follow-exchange-api
+```
+
+## Destroy the Setup
+```bash
+make destroy-$NETWORK
+```
 # Get Involved
 
 Injective Protocol is a community-driven project; we welcome all contributions.

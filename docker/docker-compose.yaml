@@ -5,49 +5,49 @@ networks:
     name: injective
 
 services:
-
   mongo:
     container_name: mongo
-    image: mongo:${INJ_MONGO_DB_IMAGE_TAG}
+    image: mongo:latest
     restart: always
     command: mongod --dbpath /data/db --replSet rs0 --port 27017 --bind_ip 0.0.0.0
     ports:
-      - ${INJ_MONGO_DB_PORT}:${INJ_MONGO_DB_PORT}
+      - 127.0.0.1:27017:27017
     networks:
       - injective
     volumes:
-      - ./volumes/mongo/db:/data/db
+      - ./volumes/mongo:/data/db
+      - ./volumes/mongo/eventProviderV2:/eventProviderV2
+      - ./volumes/mongo/exchangeV2:/exchangeV2
       - ./scripts/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
-      - ./volumes/mongo/exchangedb:/exchangedb
 
   injective-core:
     container_name: injective-core
-    image: ${INJ_CORE_IMAGE_REPO}:${INJ_IMAGE_TAG}
+    image: "public.ecr.aws/l9h3g6c6/injective-core:${INJ_CORE_IMAGE_VERSION}"
     restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
       APP_ENV: ${APP_ENV}
       APP_VERSION: ${APP_VERSION}
-      LOG_BUGSNAG_KEY: ""
-      LOG_BUGSNAG_ENABLED: "false"
+      LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
+      LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
     command:
       - /bin/sh
       - -c
       - |
         ulimit -n 120000
         yes 12345678 | injectived \
-        --log-level=warn \
+        --log-level=${LOG_LEVEL} \
         --rpc.laddr "tcp://0.0.0.0:26657" \
         --statsd-address=statsd.injective.dev:8125 \
         --statsd-enabled=true \
         start
     ports:
-      - ${INJ_NETWORK_P2P_PORT}:${INJ_NETWORK_P2P_PORT}
-      - ${INJ_NETWORK_GRPC_PORT}:${INJ_NETWORK_GRPC_PORT}
-      - ${INJ_NETWORK_COSMOS_API_PORT}:${INJ_NETWORK_COSMOS_API_PORT}
-      - ${INJ_NETWORK_COSMOS_GRPC_PORT}:${INJ_NETWORK_COSMOS_GRPC_PORT}
-      - ${INJ_NETWORK_COSMOS_GRPC_WEB_PORT}:${INJ_NETWORK_COSMOS_GRPC_WEB_PORT}
+      - 26656:26656
+      - 26657:26657
+      - 9900:9900
+      - 9091:9091
+      - 10337:10337
     deploy:
       resources:
         limits:
@@ -58,196 +58,401 @@ services:
       - injective
     volumes:
       - ./volumes/.injectived:/root/.injectived
+      - ./scripts:/home/ubuntu/scripts
     healthcheck:
-        test: ["CMD", "curl", "-f", "http://injective-core:26657"]
-        interval: 60s
-        timeout: 5s
-        retries: 5
-        start_period: 1s
+      test: [ "CMD", "curl", "-f", "http://injective-core:26657" ]
+      interval: 60s
+      timeout: 5s
+      retries: 5
+      start_period: 1s
 
-  injective-exchange-process:
-    container_name: injective-exchange-process
-    image: ${INJ_EXCHANGE_PROCESS_IMAGE_REPO}:${INJ_IMAGE_TAG}
+  indexer-eventprovider-process:
+    container_name: indexer-eventprovider-process
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
     restart: always
-    depends_on:
-      - mongo
-      - injective-core
-    command: ${INJ_EXCHANGE_PROCESS_COMMAND}
+    command: injective-indexer eventprovider-process
+    logging:
+      driver: journald
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    hostname: ${HOSTNAME}
     environment:
-      EXCHANGE_LOG_LEVEL: ${LOG_LEVEL}
-      EXCHANGE_ENV: ${APP_ENV}
-      EXCHANGE_SERVICE_WAIT_TIMEOUT: 1m
+      # universal
+      INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_ENV: ${APP_ENV}
+      INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
+      # bugsnag
       APP_ENV: ${APP_ENV}
-      APP_VERSION: fabd0d7
-      LOG_BUGSNAG_KEY: ${INJ_EXHCHANGE_PROCESS_LOG_BUGSNAG_KEY}
-      LOG_BUGSNAG_ENABLED: ${INJ_EXHCHANGE_PROCESS_LOG_BUGSNAG_ENABLED}
-      EXCHANGE_CHRONOS_BLOCK_OFFSET: 0
-      EXCHANGE_CHRONOS_DATA_PATH: var/data
-      EXCHANGE_CHRONOS_RPC_ADDR: tcp://injective-exchange-process:5500
-      EXCHANGE_DB_MONGO_CONNECTION: mongodb://mongo:27017/?replicaSet=rs0&connect=direct
-      EXCHANGE_DB_MONGO_DBNAME: exchange
-      EXCHANGE_DB_ARCHIVE_EVENTS: "true"
-      EXCHANGE_TENDERMINT_RPC: tcp://injective-core:26657
-      EXCHANGE_COSMOS_GRPC: tcp://injective-core:9900
-      EXCHANGE_COSMOS_CHAIN_ID: ${CHAIN_ID}
-      EXCHANGE_ALCHEMY_ENDPOINT: ${ALCHEMY_ENDPOINT}
-      EXCHANGE_STATSD_PREFIX: exchange-process
-      EXCHANGE_STATSD_ADDR: ${INJ_EXCHANGE_PROCESS_STATSD_ADDR}
-      EXCHANGE_STATSD_STUCK_DUR: 5m
-      EXCHANGE_STATSD_MOCKING: "false"
-      EXCHANGE_STATSD_DISABLED: ${INJ_EXCHANGE_PROCESS_STATSD_DISABLED}
+      APP_VERSION: ${APP_VERSION}
+      LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
+      LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
+      ## statsd
+      INDEXER_STATSD_AGENT: ${INDEXER_STATSD_AGENT}
+      INDEXER_STATSD_PREFIX: indexer-eventprovider-process
+      INDEXER_STATSD_ADDR: host.docker.internal:8125
+      INDEXER_STATSD_STUCK_DUR: 5m
+      INDEXER_STATSD_MOCKING: ${INDEXER_STATSD_MOCKING}
+      INDEXER_STATSD_DISABLED: ${INDEXER_STATSD_DISABLED}
+      ## pprof
+      INDEXER_PPROF_ENABLED: "false"
+      INDEXER_PPROF_ADDR: "0.0.0.0:6060"
+      # cmd specific
+      ## mongo
+      INDEXER_DB_MONGO_CONNECTION: ${INDEXER_DB_MONGO_CONNECTION}
+      INDEXER_DB_MONGO_DBNAME: eventProviderV2
+      INDEXER_DB_BLOCK_BATCH: 50
+      ## cosmos
+      INDEXER_COSMOS_CHAIN_ID: ${CHAIN_ID}
+      INDEXER_TENDERMINT_RPC: ${INDEXER_TENDERMINT_RPC}
+      INDEXER_COSMOS_GRPC: ${INDEXER_COSMOS_GRPC}
+      INDEXER_BLOCK_FETCH_JOBS: 2
+      INDEXER_CHAIN_START_HEIGHT: ${INDEXER_CHAIN_START_HEIGHT}
+      INDEXER_COSMOS_TLS_ENABLED: ${INDEXER_COSMOS_TLS_ENABLED}
     ports:
-      - ${INJ_EXCHANGE_PROCESS_CHRONOS_RPC_PORT}:${INJ_EXCHANGE_PROCESS_CHRONOS_RPC_PORT}
+      - 6069:6060
     deploy:
       resources:
         limits:
-          memory: ${INJ_EXCHANGE_PROCESS_RESOURCE_RAM_LIMIT}
-        reservations:
-          memory: ${INJ_EXCHANGE_PROCESS_RESOURCE_RAM_RESERVATION}
+          memory: 8G
+    networks:
+      - injective
+
+  indexer-eventprovider-api:
+    container_name: indexer-eventprovider-api
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    restart: always
+    command: injective-indexer eventprovider-api
+    logging:
+      driver: journald
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    hostname: ${HOSTNAME}
+    environment:
+      # universal
+      INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_ENV: ${APP_ENV}
+      INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
+      # bugsnag
+      APP_ENV: ${APP_ENV}
+      APP_VERSION: ${APP_VERSION}
+      LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
+      LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
+      ## statsd
+      INDEXER_STATSD_AGENT: ${INDEXER_STATSD_AGENT}
+      INDEXER_STATSD_PREFIX: indexer-eventprovider-api
+      INDEXER_STATSD_ADDR: host.docker.internal:8125
+      INDEXER_STATSD_STUCK_DUR: 5m
+      INDEXER_STATSD_MOCKING: ${INDEXER_STATSD_MOCKING}
+      INDEXER_STATSD_DISABLED: ${INDEXER_STATSD_DISABLED}
+      ## pprof
+      INDEXER_PPROF_ENABLED: "false"
+      INDEXER_PPROF_ADDR: "0.0.0.0:6060"
+      # cmd specific
+      ## mongo
+      INDEXER_DB_MONGO_CONNECTION: ${INDEXER_DB_MONGO_CONNECTION}
+      INDEXER_DB_MONGO_DBNAME: eventProviderV2
+      ## cosmos
+      INDEXER_PROTO_ALLOW_UNKNOWN_FIELDS: ${INDEXER_PROTO_ALLOW_UNKNOWN_FIELDS}
+      INDEXER_COSMOS_CHAIN_ID: ${CHAIN_ID}
+      INDEXER_TENDERMINT_RPC: ${INDEXER_TENDERMINT_RPC}
+      INDEXER_COSMOS_GRPC: ${INDEXER_COSMOS_GRPC}
+      INDEXER_COSMOS_TLS_ENABLED: ${INDEXER_COSMOS_TLS_ENABLED}
+      ## service
+      INDEXER_HTTP_LISTEN_ADDR: 0.0.0.0:4444
+      INDEXER_HTTP_TLS_CERT: /apps/data/public.crt
+      INDEXER_HTTP_TLS_KEY: /apps/data/private.key
+      INDEXER_HTTP_HORACLE_ADDR: https://k8s.${NETWORK}.horacle.injective.network/height/latest
+      INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD: 10
+      INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD: 60
+    ports:
+      - 4443:4444
+      - 6070:6060
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    networks:
+      - injective
+
+  indexer-exchange-import:
+    container_name: indexer-exchange-import
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    command: injective-indexer exchange-import
+    logging:
+      driver: journald
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    hostname: ${HOSTNAME}
+    environment:
+      # universal
+      INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_ENV: ${APP_ENV}
+      INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
+      # bugsnag
+      APP_ENV: ${APP_ENV}
+      APP_VERSION: ${APP_VERSION}
+      LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
+      LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
+      ## statsd
+      INDEXER_STATSD_AGENT: ${INDEXER_STATSD_AGENT}
+      INDEXER_STATSD_PREFIX: indexer-exchange-import
+      INDEXER_STATSD_ADDR: host.docker.internal:8125
+      INDEXER_STATSD_STUCK_DUR: 5m
+      INDEXER_STATSD_MOCKING: ${INDEXER_STATSD_MOCKING}
+      INDEXER_STATSD_DISABLED: ${INDEXER_STATSD_DISABLED}
+      ## pprof
+      INDEXER_PPROF_ENABLED: "false"
+      INDEXER_PPROF_ADDR: "0.0.0.0:6060"
+      # cmd specific
+      ## mongo
+      INDEXER_DB_MONGO_CONNECTION: ${INDEXER_DB_MONGO_CONNECTION}
+      INDEXER_DB_MONGO_DBNAME: ${INDEXER_DB_MONGO_DBNAME}
+      INDEXER_DB_BLOCK_BATCH: ## genesis
+
+      INDEXER_PROTO_ALLOW_UNKNOWN_FIELDS: ${INDEXER_PROTO_ALLOW_UNKNOWN_FIELDS}
+      INDEXER_GENESIS_FILE: /root/.injectived/config/genesis.json
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    networks:
+      - injective
+    volumes:
+      - ./volumes/.injectived/config/genesis.json:/root/.injectived/config/genesis.json
+
+  indexer-exchange-process:
+    container_name: indexer-exchange-process
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    restart: always
+    command: injective-indexer exchange-process
+    logging:
+      driver: journald
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    hostname: ${HOSTNAME}
+    environment:
+      # universal
+      INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_ENV: ${APP_ENV}
+      INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
+      # bugsnag
+      APP_ENV: ${APP_ENV}
+      APP_VERSION: ${APP_VERSION}
+      LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
+      LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
+      ## statsd
+      INDEXER_STATSD_AGENT: ${INDEXER_STATSD_AGENT}
+      INDEXER_STATSD_PREFIX: indexer-exchange-process
+      INDEXER_STATSD_ADDR: host.docker.internal:8125
+      INDEXER_STATSD_STUCK_DUR: 5m
+      INDEXER_STATSD_MOCKING: ${INDEXER_STATSD_MOCKING}
+      INDEXER_STATSD_DISABLED: ${INDEXER_STATSD_DISABLED}
+      ## pprof
+      INDEXER_PPROF_ENABLED: "false"
+      INDEXER_PPROF_ADDR: "0.0.0.0:6060"
+      # cmd specific
+      ## mongo
+      INDEXER_DB_MONGO_CONNECTION: ${INDEXER_DB_MONGO_CONNECTION}
+      INDEXER_DB_MONGO_DBNAME: ${INDEXER_DB_MONGO_DBNAME}
+      INDEXER_DB_ARCHIVE_EVENTS: "true"
+      INDEXER_DB_MIGRATION_VERSION:
+      INDEXER_DB_MIGRATION_HEIGHT:
+      INDEXER_DB_PAUSE_HEIGHT: ## cosmos
+
+      INDEXER_PROTO_ALLOW_UNKNOWN_FIELDS: ${INDEXER_PROTO_ALLOW_UNKNOWN_FIELDS}
+      INDEXER_COSMOS_CHAIN_ID: ${CHAIN_ID}
+      INDEXER_TENDERMINT_RPC: ${INDEXER_TENDERMINT_RPC}
+      INDEXER_COSMOS_GRPC: ${INDEXER_COSMOS_GRPC}
+      INDEXER_BLOCK_FETCH_JOBS: ${INDEXER_BLOCK_FETCH_JOBS}
+      INDEXER_DB_EVENTPROVIDER_ENDPOINT: ${INDEXER_DB_EVENTPROVIDER_ENDPOINT}
+      INDEXER_CHAIN_START_HEIGHT: ${INDEXER_CHAIN_START_HEIGHT}
+      INDEXER_COSMOS_TLS_ENABLED: ${INDEXER_COSMOS_TLS_ENABLED}
+    ports:
+      - 6071:6060
+    deploy:
+      resources:
+        limits:
+          memory: ${INDEXER_EXCHANGE_PROCESS_MEMORY_LIMIT}
+    networks:
+      - injective
+
+  indexer-exchange-api:
+    container_name: indexer-exchange-api
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    restart: always
+    command: injective-indexer exchange-api
+    logging:
+      driver: journald
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    hostname: ${HOSTNAME}
+    environment:
+      # universal
+      INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_ENV: ${APP_ENV}
+      INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
+      # bugsnag
+      APP_ENV: ${APP_ENV}
+      APP_VERSION: ${APP_VERSION}
+      LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
+      LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
+      ## statsd
+      INDEXER_STATSD_AGENT: ${INDEXER_STATSD_AGENT}
+      INDEXER_STATSD_PREFIX: indexer-exchange-api
+      INDEXER_STATSD_ADDR: host.docker.internal:8125
+      INDEXER_STATSD_STUCK_DUR: 5m
+      INDEXER_STATSD_MOCKING: ${INDEXER_STATSD_MOCKING}
+      INDEXER_STATSD_DISABLED: ${INDEXER_STATSD_DISABLED}
+      ## pprof
+      INDEXER_PPROF_ENABLED: "false"
+      INDEXER_PPROF_ADDR: "0.0.0.0:6060"
+      # cmd specific
+      ## mongo
+      INDEXER_DB_MONGO_CONNECTION: ${INDEXER_DB_MONGO_CONNECTION}
+      INDEXER_DB_MONGO_DBNAME: ${INDEXER_DB_MONGO_DBNAME}
+      ## cosmos
+      INDEXER_TENDERMINT_RPC: ${INDEXER_TENDERMINT_RPC}
+      INDEXER_COSMOS_GRPC: ${INDEXER_COSMOS_GRPC}
+      INDEXER_COSMOS_CHAIN_ID: ${CHAIN_ID}
+      INDEXER_FEE_PAYER_PK: ${EXCHANGE_FEE_PAYER_PK}
+      INDEXER_GAS_ADJUSTMENT_COEF: ${INDEXER_GAS_ADJUSTMENT_COEF}
+      INDEXER_COSMOS_TLS_ENABLED: ${INDEXER_COSMOS_TLS_ENABLED}
+      ## service
+      INDEXER_GRPC_LISTEN_ADDR: 0.0.0.0:9910
+      INDEXER_HTTP_LISTEN_ADDR: 0.0.0.0:4444
+      INDEXER_HTTP_TLS_CERT: /apps/data/public.crt
+      INDEXER_HTTP_TLS_KEY: /apps/data/private.key
+      INDEXER_HTTP_HORACLE_ADDR: https://k8s.${NETWORK}.horacle.injective.network/height/latest
+      INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD: 10
+      INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD: 60
+    ports:
+      - 4444:4444
+      - 9910:9910
+      - 6072:6060
+    deploy:
+      resources:
+        limits:
+          memory: ${INDEXER_EXCHANGE_API_MEMORY_LIMIT}
+    networks:
+      - injective
+
+  indexer-chronos-process:
+    container_name: indexer-chronos-process
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    restart: always
+    command: injective-indexer chronos-process
+    logging:
+      driver: journald
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    hostname: ${HOSTNAME}
+    depends_on:
+      - indexer-exchange-api
+    environment:
+      # universal
+      INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      #${LOG_LEVEL}
+      INDEXER_ENV: ${APP_ENV}
+      INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
+      # bugsnag
+      APP_ENV: ${APP_ENV}
+      APP_VERSION: ${APP_VERSION}
+      LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
+      LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
+      ## statsd
+      INDEXER_STATSD_AGENT: ${INDEXER_STATSD_AGENT}
+      INDEXER_STATSD_PREFIX: indexer-chronos-process
+      INDEXER_STATSD_ADDR: host.docker.internal:8125
+      INDEXER_STATSD_STUCK_DUR: 5m
+      INDEXER_STATSD_MOCKING: ${INDEXER_STATSD_MOCKING}
+      INDEXER_STATSD_DISABLED: ${INDEXER_STATSD_DISABLED}
+      # exchange
+      INDEXER_EXCHANGE_RPC_ADDR: ${INDEXER_EXCHANGE_RPC_ADDR}
+      # pprof
+      INDEXER_PPROF_ENABLED: "false"
+      INDEXER_PPROF_ADDR: "0.0.0.0:6060"
+      # cmd specific
+      # cosmos
+      INDEXER_PROTO_ALLOW_UNKNOWN_FIELDS: ${INDEXER_PROTO_ALLOW_UNKNOWN_FIELDS}
+      INDEXER_COSMOS_CHAIN_ID: ${CHAIN_ID}
+      INDEXER_TENDERMINT_RPC: ${INDEXER_TENDERMINT_RPC}
+      INDEXER_COSMOS_GRPC: ${INDEXER_COSMOS_GRPC}
+      INDEXER_BLOCK_FETCH_JOBS: ${INDEXER_BLOCK_FETCH_JOBS}
+      INDEXER_DB_EVENTPROVIDER_ENDPOINT: ${INDEXER_DB_EVENTPROVIDER_ENDPOINT}
+      INDEXER_COSMOS_TLS_ENABLED: ${INDEXER_COSMOS_TLS_ENABLED}
+      # chronos
+      INDEXER_CHRONOS_DATA_PATH: var/data
+      INDEXER_CHRONOS_RPC_ADDR: tcp://0.0.0.0:5500
+
+      INDEXER_CHAIN_START_HEIGHT: ${INDEXER_CHAIN_START_HEIGHT}
+
+      INDEXER_CHRONOS_RELAYER_ADDRESS: ${INDEXER_CHRONOS_RELAYER_ADDRESS}
+      INDEXER_CHRONOS_LEADERBOARD_CROSS_MARKET_IDS: ${INDEXER_CHRONOS_LEADERBOARD_CROSS_MARKET_IDS}
+      INDEXER_CHRONOS_LEADERBOARD_CUSTOM_RES: ${INDEXER_CHRONOS_LEADERBOARD_CUSTOM_RES}
+
+    ports:
+      - 5500:5500
+      - 6073:6060
+    deploy:
+      resources:
+        limits:
+          memory: ${INDEXER_CHRONOS_PROCESS_MEMORY_LIMIT}
     networks:
       - injective
     volumes:
       - ./volumes/chronos:/apps/data/var/data
 
-  injective-exchange-api:
-    container_name: injective-exchange-api
-    image: ${INJ_EXCHANGE_API_IMAGE_REPO}:${INJ_IMAGE_TAG}
+  indexer-chronos-api:
+    container_name: indexer-chronos-api
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
     restart: always
-    depends_on:
-      - mongo
-      - injective-core
-      - injective-exchange-process
-    command:
-      - /bin/sh
-      - -c
-      - |
-        echo "Wait chronos API for 10sec."
-        sleep 10
-        injective-exchange api
+    command: injective-indexer chronos-api
+    logging:
+      driver: journald
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    hostname: ${HOSTNAME}
     environment:
-      EXCHANGE_LOG_LEVEL: ${LOG_LEVEL}
-      EXCHANGE_ENV: ${APP_ENV}
-      EXCHANGE_SERVICE_WAIT_TIMEOUT: 1m
+      # universal
+      INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_ENV: ${APP_ENV}
+      INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
+      # bugsnag
       APP_ENV: ${APP_ENV}
-      APP_VERSION: fabd0d7
-      LOG_BUGSNAG_KEY: ""
-      LOG_BUGSNAG_ENABLED: "false"
-      EXPLORER_RPC: tcp://injective-core:26657
-      EXPLORER_EXCHANGE_ENDPOINT: https://dex.binance.org/api/v1
-      EXPLORER_COINGECKO_ENDPOINT: https://api.coingecko.com/api/v3
-      EXCHANGE_CHRONOS_BLOCK_OFFSET: 0
-      EXCHANGE_CHRONOS_DATA_PATH: var/data
-      EXCHANGE_CHRONOS_RPC_ADDR: tcp://injective-exchange-process:5500
-      EXCHANGE_DB_MONGO_CONNECTION: mongodb://mongo:27017/?replicaSet=rs0&connect=direct
-      EXCHANGE_DB_MONGO_DBNAME: exchange
-      EXCHANGE_DB_ARCHIVE_EVENTS: "true"
-      EXCHANGE_TENDERMINT_RPC: tcp://injective-core:26657
-      EXCHANGE_COSMOS_GRPC: tcp://injective-core:9900
-      EXCHANGE_COSMOS_CHAIN_ID: ${CHAIN_ID}
-      EXCHANGE_GRPC_LISTEN_ADDR: 0.0.0.0:9910
-      EXCHANGE_HTTP_LISTEN_ADDR: 0.0.0.0:4444
-      EXCHANGE_HTTP_TLS_CERT: /apps/data/public.crt
-      EXCHANGE_HTTP_TLS_KEY: /apps/data/private.key
-      EXCHANGE_FEE_PAYER_PK: ${INJ_EXCHANGE_API_FEE_PAYER_PK}
-      EXCHANGE_ALCHEMY_ENDPOINT: ${ALCHEMY_ENDPOINT}
-      EXCHANGE_STATSD_PREFIX: exchange-api
-      EXCHANGE_STATSD_ADDR: ${INJ_EXCHANGE_API_STATSD_ADDR}
-      EXCHANGE_STATSD_STUCK_DUR: 5m
-      EXCHANGE_STATSD_MOCKING: "false"
-      EXCHANGE_STATSD_DISABLED: ${INJ_EXCHANGE_API_STATSD_DISABLED}
+      APP_VERSION: ${APP_VERSION}
+      LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
+      LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
+      ## statsd
+      INDEXER_STATSD_AGENT: ${INDEXER_STATSD_AGENT}
+      INDEXER_STATSD_PREFIX: indexer-chronos-api
+      INDEXER_STATSD_ADDR: host.docker.internal:8125
+      INDEXER_STATSD_STUCK_DUR: 5m
+      INDEXER_STATSD_MOCKING: ${INDEXER_STATSD_MOCKING}
+      INDEXER_STATSD_DISABLED: ${INDEXER_STATSD_DISABLED}
+      ## pprof
+      INDEXER_PPROF_ENABLED: "false"
+      INDEXER_PPROF_ADDR: "0.0.0.0:6060"
+      # cmd specific
+      ## chronos
+      INDEXER_CHRONOS_RPC_ADDR: tcp://indexer-chronos-process:5500
+      INDEXER_COSMOS_TLS_ENABLED: ${INDEXER_COSMOS_TLS_ENABLED}
+      ## mongo
+      INDEXER_DB_MONGO_CONNECTION: ${INDEXER_DB_MONGO_CONNECTION}
+      INDEXER_DB_MONGO_DBNAME: ${INDEXER_DB_MONGO_DBNAME}
+      ## service
+      INDEXER_HTTP_LISTEN_ADDR: 0.0.0.0:4445
+      INDEXER_HTTP_TLS_CERT: /apps/data/public.crt
+      INDEXER_HTTP_TLS_KEY: /apps/data/private.key
+      INDEXER_HTTP_HORACLE_ADDR: https://k8s.${NETWORK}.horacle.injective.network/height/latest
+      INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD: 10
+      INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD: 60
+      INDEXER_EXCHANGE_RPC_ADDR: ${INDEXER_EXCHANGE_RPC_ADDR}
     ports:
-      - ${INJ_EXCHANGE_API_CHRONOS_PORT}:${INJ_EXCHANGE_API_CHRONOS_PORT}
-      - ${INJ_EXCHANGE_GRPC_LISTEN_PORT}:${INJ_EXCHANGE_GRPC_LISTEN_PORT}
+      - 4445:4445
+      - 6074:6060
     deploy:
       resources:
         limits:
-          memory: ${INJ_EXCHANGE_API_RESOURCE_RAM_LIMIT}
-        reservations:
-          memory: ${INJ_EXCHANGE_API_RESOURCE_RAM_RESERVED}
+          memory: ${INDEXER_CHRONOS_API_MEMORY_LIMIT}
     networks:
       - injective
-    volumes:
-      - ./volumes/chronos:/apps/data/var/data
-      - ./volumes/exchange:/data/exchange
-
-
-  injective-exchange-gateway:
-    container_name: injective-exchange-gateway
-    image: ${INJ_EXCHANGE_GATEWAY_IMAGE_REPO}:${INJ_IMAGE_TAG}
-    restart: always
-    depends_on:
-      - mongo
-      - injective-core
-      - injective-exchange-process
-      - injective-exchange-api
-    environment:
-      EXCHANGE_LOG_LEVEL: ${LOG_LEVEL}
-      EXCHANGE_ENV: ${APP_ENV}
-      EXCHANGE_SERVICE_WAIT_TIMEOUT: 1m
-      APP_ENV: ${APP_ENV}
-      APP_VERSION: fabd0d7
-      LOG_BUGSNAG_KEY: ""
-      LOG_BUGSNAG_ENABLED: ${INJ_EXCHANGE_GATEWAY_LOG_BUGSNAG_ENABLED}
-      EXCHANGE_COSMOS_CHAIN_ID: ${CHAIN_ID}
-      EXCHANGE_COSMOS_GRPC: tcp://injective-core:9900
-      EXCHANGE_TENDERMINT_RPC: tcp://injective-core:26657
-      EXCHANGE_FEE_PAYER_PK: ""
-      EXCHANGE_GRPC_LISTEN_ADDR: 0.0.0.0:9910
-      EXCHANGE_HTTP_LISTEN_ADDR: 0.0.0.0:4444
-      EXCHANGE_HTTP_GATEWAY_LISTEN_ADDR: 0.0.0.0:8810
-      EXCHANGE_HTTP_TLS_CERT: /apps/data/public.crt
-      EXCHANGE_HTTP_TLS_KEY: /apps/data/private.key
-      EXCHANGE_STATSD_PREFIX: exchange-gateway
-      EXCHANGE_STATSD_ADDR: ${INJ_EXCHNAGE_GATEWAY_EXCHANGE_STATSD_ADDR}
-      EXCHANGE_STATSD_STUCK_DUR: 5m
-      EXCHANGE_STATSD_MOCKING: "false"
-      EXCHANGE_STATSD_DISABLE: ${INJ_EXCHANGE_GATEWAY_EXCHANGE_STATSD_DISABLE}
-    command: ${INJ_EXCHANGE_GATEWAY_COMMAND}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    ports:
-      - ${INJ_EXCHANGE_GATEWAY_CHRONOS_PORT_EXPOSED}:${INJ_EXCHANGE_GATEWAY_CHRONOS_PORT}
-      - ${INJ_EXCHANGE_GATEWAY_HTTP_GATEWAY_LISTEN_PORT}:${INJ_EXCHANGE_GATEWAY_HTTP_GATEWAY_LISTEN_PORT}
-      - ${INJ_EXCHANGE_GATEWAY_GRPC_PORT_EXPOSED}:${INJ_EXCHANGE_GATEWAY_GRPC_PORT}
-    networks:
-      - injective
-    volumes:
-      - ./volumes/exchange:/data/exchange
-
-    
-  injective-peggo:
-    container_name: injective-peggo
-    image: 981432137740.dkr.ecr.us-east-2.amazonaws.com/peggo:latest
-    command:
-      - /bin/sh
-      - -c
-      - |
-        cd /root/.injectived/peggo/ && echo y | peggo tx register-eth-key && peggo orchestrator $INJ_ADDR:inj
-    depends_on:
-      - injective-core
-    environment:
-      APP_ENV: ${APP_ENV}
-      APP_LOG_LEVEL: ${LOG_LEVEL}
-      SERVICE_WAIT_TIMEOUT: 1m
-      PEGGY_COSMOS_PRIVKEY: ${INJ_PEGGY_COSMOS_PRIVKEY}
-      PEGGY_COSMOS_GRPC: tcp://localhost:9900
-      PEGGY_TENDERMINT_RPC: http://localhost:26657
-      PEGGY_FEE_DENOM: inj
-      INJECTIVED_CHAIN_ID: ${CHAIN_ID}
-      PEGGY_ETH_RPC:  http://localhost:8545
-      PEGGY_ETH_PRIVATE_KEY: ${INJ_PEGGO_PEGGY_ETH_PRIVATE_KEY}
-      PEGGY_CONTRACT_ADDRESS: ${INJ_PEGGY_CONTRACT_ADDRESS}
-      INJ_CONTRACT_ADDRESS: ${INJ_CONTRACT_ADDRESS}
-      STATSD_PREFIX: peggo
-      STATSD_ADDR: ${INJ_PEGGO_STATSD_ADDR}
-      STATSD_STUCK_DUR: 5m
-      STATSD_MOCKING: "false"
-      STATSD_DISABLED: ${INJ_PEGGO_STATSD_DISABLED}
-    networks:
-      - injective
-    volumes:
-      - ./volumes/.injectived:/root/.injectived
