@@ -1,7 +1,7 @@
 #!/bin/sh
 
-GIT_TESTNET_TAG="v0.4.19-1656563866"
-GIT_MAINNET_TAG="v1.4.0-1642928125"
+GIT_TESTNET_TAG="v0.4.19-1661549677"
+GIT_MAINNET_TAG="v1.7.0-1665417543"
 GIT_INJ_ORG="https://github.com/InjectiveLabs"
 GIT_NETWORK_CONFIG="mainnet-config"
 GIT_RELEASE_REPO_MAINNET="https://github.com/InjectiveLabs/injective-chain-releases/releases/download"
