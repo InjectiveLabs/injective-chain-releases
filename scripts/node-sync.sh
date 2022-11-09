@@ -1,33 +1,39 @@
-#!/bin/sh
+#!/bin/bash
 
-#CHAIN sync height
-CHAIN_SYNC_HEIGHT=5000000
 # MSG
 MSG_BACKUP_START="Starting backup..."
 MSG_AWS_CLI="AWS CLI is not installed, please follow the installation guide https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html"
+MSG_INJD="Injectived not installed, please run the node_create.sh script first then run this script again"
 MSG_SYNC_START="🔥 Starting sync process...🔥"
 MSG_SYNC_SUCCESS="Syncing Successful, wait for some time to let your node catch up."
 MSG_SYN_FAILED="Sync Failed"
 MSG_NOTE="NOTE: By applying this snapshot, you trust that the provided blockchain history by Injective Labs is genuine."
-
+TOOLS=("aws" "injectived" "jq" "tr" "liblz4-tool" "aria2" "curl")
+WAIT_TIMEOUT=600
 # Turn on debug mode
 #set -x
 
-command_exists() {
-  # Check if command exists and fail otherwise
-  if hash $1 2>/dev/null; then
-    echo $2
-    exit
-  fi
-}
-
-aws_cli_exists() {
-  command_exists "aws --version" $MSG_AWS_CLI
-}
-
-injectived_exists() {
-  command_exists "injectived version" $MSG_NEW_NODE
-  # Stop all running processes
+check_tools() {
+  INC_TOOLS=false
+  for TOOL in ${TOOLS[@]}; do
+    command -v $TOOL >/dev/null || {
+      case "$TOOL" in
+      "aws")
+        echo $MSG_AWS_CLI
+        INC_TOOLS=true
+        ;;
+      "injectived")
+        echo $MSG_INJD
+        INC_TOOLS=true
+        ;;
+      *)
+        echo "$TOOL not installed, kindly install it and run this script again"
+        INC_TOOLS=true
+        ;;
+      esac
+    }
+  done
+  [[ $INC_TOOLS == "true" ]] && exit 1
   killall injectived &>/dev/null || true
 }
 
@@ -39,36 +45,53 @@ injectived_backup() {
 
 injectived_sync() {
   echo $MSG_SYNC_START
-  aws s3 sync --no-sign-request --delete s3://injective-snapshots/mainnet/injectived/data ~/.injectived/data
+  mkdir temp && cd temp
+  URL=$(curl -L https://quicksync.io/injective.json | jq -r '.[] |select(.file=="injective-1-pruned")|.url')
+  aria2c -x5 $URL
+  lz4 -d $(basename $URL) | tar xf - -C $HOME/.injectived
+  cd .. && rm -rf temp
 }
 
 injectived_restart() {
   injectived version
   injectived start
-  #TODO: Update binary if required
+}
+
+injectived_wait() {
+  timeout $WAIT_TIMEOUT bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:26657/health)" != "200" ]]; do sleep 5; done' || {
+    echo "Chain readiness probe exceeded timeout"
+    exit 1
+  }
 }
 
 injectived_healthcheck() {
-  # check if it's syncing from height > 2000000
-  height = curl localhost:26657/status | grep height
-  if height >$CHAIN_SYNC_HEIGHT; then
-    $MSG_SYNC_SUCCESS
-  else
-    echo $MSG_SYN_FAILED
-  fi
+  COUNT=0
+  while true; do
+    [[ $COUNT -lt 5 ]] || break
+    LAST_HEIGHT=$(curl -sS http://localhost:26657/block | jq .result.block.header.height | tr -d '"')
+    sleep 5
+    CUR_HEIGHT=$(curl -sS http://localhost:26657/block | jq .result.block.header.height | tr -d '"')
+    if [[ $LAST_HEIGHT -lt $CUR_HEIGHT ]]; then
+      COUNT=$((COUNT + 1))
+    else
+      echo $MSG_SYNC_FAILED
+      exit 1
+    fi
+  done
+  echo $MSG_SYNC_SUCCESS
 }
 
 injectived_start_sync() {
-  # Step1: Check if injectived exits
-  injectived_exists
-  # Step2: Backup config
+  #Step1: Check if all required tools are installed - show what tools are missing
+  check_tools
+  #Step2: Backup config
   injectived_backup
-  #Step3: Check if aws cli exists
-  aws_cli_exists
-  #Step4: Sync injectived snapshot from AWS bucket
+  #Step3: Sync injectived snapshot from AWS bucket
   injectived_sync
-  #Step5: Restart
+  #Step4: Restart
   injectived_restart
+  #Step5: Wait for injectived to be ready
+  injectived_wait
   #Step6: Healthcheck compare block height, to make sure we synced successfuly
   injectived_healthcheck
 }
