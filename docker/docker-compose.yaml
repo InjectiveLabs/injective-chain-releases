@@ -158,6 +158,7 @@ services:
       INDEXER_COSMOS_GRPC: ${INDEXER_COSMOS_GRPC}
       INDEXER_COSMOS_TLS_ENABLED: ${INDEXER_COSMOS_TLS_ENABLED}
       ## service
+      INDEXER_GRPC_LISTEN_ADDR: 0.0.0.0:9910
       INDEXER_HTTP_LISTEN_ADDR: 0.0.0.0:4444
       INDEXER_HTTP_TLS_CERT: /apps/data/public.crt
       INDEXER_HTTP_TLS_KEY: /apps/data/private.key
@@ -167,6 +168,7 @@ services:
     ports:
       - 4443:4444
       - 6070:6060
+      - 9912:9910
     deploy:
       resources:
         limits:
