@@ -86,7 +86,7 @@ In the event that the upgrade does not succeed, validators and operators must re
    sudo mv libwasmvm.x86_64.so /usr/lib
   ```
 
-4. Verify you are currently running the correct new version (`6e71c40`) of `injectived` after downloading the 10007 release:
+4. Verify you are currently running the correct new version (`6e71c40`) of `injectived` after downloading the 10008 release:
     ```bash
    injectived version
    Version dev (6e71c40)
@@ -98,7 +98,7 @@ In the event that the upgrade does not succeed, validators and operators must re
    ```
    The binary will perform the upgrade automatically and continue the next consensus round if everything goes well.
 
-6. Verify you are currently running the correct version (`ade8906`) of `peggo` after downloading the 10007 release:
+6. Verify you are currently running the correct version (`ade8906`) of `peggo` after downloading the 10008 release:
    ```bash
    peggo version
    Version dev (ade8906)
