@@ -5,7 +5,7 @@ If passed, this proposal would commit the Injective Mainnet to halting the 10007
 
 In case of a failed migration via the upgrade module, the Injective Labs team will post an official `injective-canonical-chain-8` genesis file, but it is recommended that validators should do try to export the genesis on their own node to verify the resulting genesis file.
 
-Following [proposal 182](https://hub.injective.network/proposals/182/), this indicates that the upgrade procedure should be performed on block number `19753923`.
+Following [proposal 182](https://hub.injective.network/proposals/182/), this indicates that the upgrade procedure should be performed on block number `19761600`.
 
 - [Summary](#summary)
 - [Risks](#risks)
@@ -19,7 +19,7 @@ The Injective Chain 10007 will undergo a scheduled upgrade to Injective Chain 10
 
 The following is a short summary of the upgrade steps:
 
-1. Vote and wait until the node panics at block height 19753922.
+1. Vote and wait until the node panics at block height 19761599.
 2. Backing up configs, data, and keys used for running the Injective Chain.
 3. Install the [Injective Chain 10008 release](https://github.com/InjectiveLabs/injective-chain-releases/releases/tag/v1.8.0-1668679102)
 4. Start your node with the new injectived binary to fulfill the upgrade.
