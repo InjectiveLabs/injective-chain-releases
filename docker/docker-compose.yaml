@@ -159,7 +159,7 @@ services:
       INDEXER_COSMOS_TLS_ENABLED: ${INDEXER_COSMOS_TLS_ENABLED}
       ## service
       INDEXER_HTTP_LISTEN_ADDR: 0.0.0.0:4444
-      INDEXER_GRPC_LISTEN_ADDR: 0.0.0.0:9912
+      INDEXER_GRPC_LISTEN_ADDR: 0.0.0.0:9910
       INDEXER_HTTP_TLS_CERT: /apps/data/public.crt
       INDEXER_HTTP_TLS_KEY: /apps/data/private.key
       INDEXER_HTTP_HORACLE_ADDR: https://k8s.${NETWORK}.horacle.injective.network/height/latest
@@ -168,6 +168,7 @@ services:
     ports:
       - 4443:4444
       - 6070:6060
+      - 9912:9910
     deploy:
       resources:
         limits:
