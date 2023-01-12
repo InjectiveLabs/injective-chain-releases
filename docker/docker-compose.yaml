@@ -7,7 +7,7 @@ networks:
 services:
   mongo:
     container_name: mongo
-    image: mongo:latest
+    image: mongo:5.0.6
     restart: always
     command: mongod --dbpath /data/db --replSet rs0 --port 27017 --bind_ip 0.0.0.0
     ports:
