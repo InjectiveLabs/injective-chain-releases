@@ -38,7 +38,11 @@ injectived_configure() {
 injectived_set_nodes() {
   if [ "$NETWORK" != "local" ]; then
     NODES=$(cat $GIT_NETWORK_CONFIG/$NETWORK_CONFIG_PATH/seeds.txt | tr -s ' ' | cut -d ' ' -f 2 | tr '\n' ',' | tr -d '"' | sed 's/,$//')
-    sed -i "/^\([[:space:]]*seeds = \).*/s//\1'"$NODES"'/" $INJ_HOME/config/config.toml
+    if [ "$NETWORK" = "testnet" ]; then
+      sed -i "/^\([[:space:]]*persistent_peers = \).*/s//\1'"$NODES"'/" $INJ_HOME/config/config.toml
+    else
+      sed -i "/^\([[:space:]]*seeds = \).*/s//\1'"$NODES"'/" $INJ_HOME/config/config.toml
+    fi
   fi
 }
 
