@@ -99,11 +99,11 @@ Validator operators should configure the **timeout_commit** in **config.toml** t
    ```
    The binary will perform the upgrade automatically and continue the next consensus round if everything goes well.
 
-6. Verify you are currently running the correct version (`ade8906`) of `peggo` after downloading the 10009 release:
+6. Verify you are currently running the correct version (`3eedb36`) of `peggo` after downloading the 10009 release:
   ```bash
    peggo version
-   Version dev (ade8906)
-   Compiled at 20220830-1738 using Go go1.18.5 (amd64)
+   Version dev (3eedb36)
+   Compiled at 20230127-0002 using Go go1.19.5 (amd64)
    ```
 8. Start peggo
    ```bash
