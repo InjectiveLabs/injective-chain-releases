@@ -98,10 +98,10 @@ To check the progress of the event provider and exchange database sync run
 mongosh exchangeV2 --eval "db.system.find().pretty()"
 mongosh eventProviderV2 --eval "db.system.find().pretty()"
 ```
-### Injective Relayer Stack ###
+### Injective Market Maker Stack ###
 
-This stack contains the Relayer components. It will run:
-* Injective Trading API components (exchange API, exchange process, event provider API, event provider process, chronos API, chronos Process)
+This stack contains the Market Maker components. It will run:
+* Injective Market Maker API components (exchange API, exchange process, event provider API, event provider process)
 
 First run the the event provider
 ```bash
@@ -111,25 +111,28 @@ Wait until the event provider has finished syncing. You can check its progress a
 ```bash
 sudo docker logs indexer-eventprovider-process | grep "initial sync completed"
 ```
-Now you can run the rest of the Relayer stack
+Now you can run the rest of the Market Maker stack
 ```bash
-docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans indexer-exchange-process indexer-exchange-api indexer-chronos-process indexer-chronos-api
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans indexer-exchange-process indexer-exchange-api
 ```
-Wait until the event provider has finished syncing. You can check its progress and see if it has completed syncing by running the command below. Replace $SERVICE_PROCESS with `indexer-exchange-process` or `indexer-chronos-process`
+Wait until the exchange has finished syncing. You can check its progress and see if it has completed syncing by running the command below.
 ```bash
-docker logs $SERVICE_PROCESS | grep "initial sync completed"
+docker logs indexer-exchange-process | grep "initial sync completed"
 ```
-### Injective Trading Stack ####
+### Injective DEX Stack ####
+This stack contains the DEX components. It will run:
+* Injective DEX API components (exchange API, exchange process, event provider API, event provider process, chronos API, chronos process, explorer API, explorer process)
 
-This stack contains additional trading components. It will run:
-
-* Injective Core (injectived)
-* Injective Trading API components (exchange API, exchange Gateway, exchange process, trading bot, liquidator bot, price oracle)
+To run the additional components needed for the DEX stack you should run this command after completing the Market Maker stack guide.
 
 ```bash
-docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml -f addons/docker-compose.dex.yaml up -d --remove-orphans
 ```
-
+Wait until the explorer and chronos has finished syncing. You can check its progress and see if it has completed syncing by running the command below.
+```bash
+docker logs indexer-explorer-process | grep "initial sync completed"
+docker logs indexer-chronos-process | grep "initial sync completed"
+```
 ## Check logs
 
 ```
