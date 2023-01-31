@@ -224,7 +224,7 @@ services:
     networks:
       - injective
     volumes:
-      - ./volumes/.injectived/config/genesis.json:/root/.injectived/config/genesis.json
+      - ~/.injectived/config:/root/.injectived/config
 
   indexer-exchange-process:
     container_name: indexer-exchange-process
