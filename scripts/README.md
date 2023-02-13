@@ -11,7 +11,7 @@ Those are set of scripts that will help you to bootstrap the Injective node or s
 ## Getting Started
 
 ### For node create 
-Run [node-create script](node-sync.sh).
+Run [node-create script](node-create.sh).
 
 ```
 git clone https://github.com/InjectiveLabs/injective-chain-releases.git
