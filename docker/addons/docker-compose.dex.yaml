@@ -3,7 +3,7 @@ version: '3.9'
 services:
   indexer-chronos-process:
     container_name: indexer-chronos-process
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${CHRONOS_APP_VERSION}
     pull_policy: always
     restart: always
     command: injective-indexer chronos-process
@@ -22,7 +22,7 @@ services:
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
       APP_ENV: ${APP_ENV}
-      APP_VERSION: ${APP_VERSION}
+      APP_VERSION: ${CHRONOS_APP_VERSION}
       LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
       LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
       ## statsd
@@ -71,7 +71,7 @@ services:
 
   indexer-chronos-api:
     container_name: indexer-chronos-api
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${CHRONOS_APP_VERSION}
     pull_policy: always
     restart: always
     command: injective-indexer chronos-api
@@ -87,7 +87,7 @@ services:
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
       APP_ENV: ${APP_ENV}
-      APP_VERSION: ${APP_VERSION}
+      APP_VERSION: ${CHRONOS_APP_VERSION}
       LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
       LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
       ## statsd
@@ -127,7 +127,7 @@ services:
 
   indexer-explorer-process:
     container_name: indexer-explorer-process
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXPLORER_APP_VERSION}
     restart: always
     command: injective-indexer explorer-process
     logging:
@@ -142,7 +142,7 @@ services:
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
       APP_ENV: ${APP_ENV}
-      APP_VERSION: ${APP_VERSION}
+      APP_VERSION: ${EXPLORER_APP_VERSION}
       LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
       LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
       ## statsd
@@ -185,7 +185,7 @@ services:
 
   indexer-explorer-api:
     container_name: indexer-explorer-api
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXPLORER_APP_VERSION}
     restart: always
     command: injective-indexer explorer-api
     logging:
@@ -200,7 +200,7 @@ services:
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
       APP_ENV: ${APP_ENV}
-      APP_VERSION: ${APP_VERSION}
+      APP_VERSION: ${EXPLORER_APP_VERSION}
       LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
       LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
       ## statsd

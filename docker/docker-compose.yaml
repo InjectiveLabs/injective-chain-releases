@@ -69,7 +69,7 @@ services:
 
   indexer-eventprovider-process:
     container_name: indexer-eventprovider-process
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EVENTPROVIDER_APP_VERSION}
     pull_policy: always
     restart: always
     command: injective-indexer eventprovider-process
@@ -85,7 +85,7 @@ services:
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
       APP_ENV: ${APP_ENV}
-      APP_VERSION: ${APP_VERSION}
+      APP_VERSION: ${EVENTPROVIDER_APP_VERSION}
       LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
       LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
       ## statsd
@@ -121,7 +121,7 @@ services:
 
   indexer-eventprovider-api:
     container_name: indexer-eventprovider-api
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EVENTPROVIDER_APP_VERSION}
     pull_policy: always
     restart: always
     command: injective-indexer eventprovider-api
@@ -137,7 +137,7 @@ services:
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
       APP_ENV: ${APP_ENV}
-      APP_VERSION: ${APP_VERSION}
+      APP_VERSION: ${EVENTPROVIDER_APP_VERSION}
       LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
       LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
       ## statsd
@@ -181,7 +181,7 @@ services:
 
   indexer-exchange-import:
     container_name: indexer-exchange-import
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXCHANGE_APP_VERSION}
     pull_policy: always
     command: injective-indexer exchange-import
     logging:
@@ -196,7 +196,7 @@ services:
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
       APP_ENV: ${APP_ENV}
-      APP_VERSION: ${APP_VERSION}
+      APP_VERSION: ${EXCHANGE_APP_VERSION}
       LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
       LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
       ## statsd
@@ -228,7 +228,7 @@ services:
 
   indexer-exchange-process:
     container_name: indexer-exchange-process
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXCHANGE_APP_VERSION}
     pull_policy: always
     restart: always
     command: injective-indexer exchange-process
@@ -244,7 +244,7 @@ services:
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
       APP_ENV: ${APP_ENV}
-      APP_VERSION: ${APP_VERSION}
+      APP_VERSION: ${EXCHANGE_APP_VERSION}
       LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
       LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
       ## statsd
@@ -289,7 +289,7 @@ services:
 
   indexer-exchange-api:
     container_name: indexer-exchange-api
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXCHANGE_APP_VERSION}
     pull_policy: always
     restart: always
     command: injective-indexer exchange-api
@@ -305,7 +305,7 @@ services:
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
       APP_ENV: ${APP_ENV}
-      APP_VERSION: ${APP_VERSION}
+      APP_VERSION: ${EXCHANGE_APP_VERSION}
       LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
       LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
       ## statsd
