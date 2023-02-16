@@ -19,10 +19,11 @@ The following requirements are required to run the node natively.
 
 The following table shows the recommended hardware requirements for the running node on the mainnet.
 
-| Validator Node | Sentry Node |
+| Validator Node   | Sentry Node    |
 | -----------------| ---------------|
-| Memory: 16Gb     | Memory: 16Gb+  |
-| Storage: 1Tb     | Storage: 1Tb   |
+| CPU: 8 Cores     | CPU: 8 Cores   |
+| Memory: 64Gb     | Memory: 64Gb+  |
+| Storage: 2Tb     | Storage: 2Tb   |
 | Network: 5Gbps+  | Network: 5Gbps+|
 
 ### Software
