@@ -6,6 +6,7 @@ It also contains hassle-free guides and scripts for getting started and managing
 
 ### Guides included
 
+* [Injective Exchange Service Setup Guide](https://www.notion.so/Injective-Exchange-Service-Setup-Guide-7e59980634d54991862300670583d46a) (Includes Running a Node)
 * [Create a new node and join the network](guides/new-node.md)
 * [Sync node from the snapshot](guides/sync-node.md) (quickest way to sync blocks).
 * [Sync node from scratch via public sentries](guides/sync-node.md) (better decentralization factor).
@@ -19,10 +20,11 @@ The following requirements are required to run the node natively.
 
 The following table shows the recommended hardware requirements for the running node on the mainnet.
 
-| Validator Node | Sentry Node |
+| Validator Node   | Sentry Node    |
 | -----------------| ---------------|
-| Memory: 16Gb     | Memory: 16Gb+  |
-| Storage: 1Tb     | Storage: 1Tb   |
+| CPU: 8 Cores     | CPU: 8 Cores   |
+| Memory: 64Gb     | Memory: 64Gb+  |
+| Storage: 2Tb     | Storage: 2Tb   |
 | Network: 5Gbps+  | Network: 5Gbps+|
 
 ### Software
