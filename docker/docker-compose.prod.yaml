@@ -24,16 +24,6 @@ services:
     logging:
       driver: journald
 
-  indexer-chronos-api:
-    restart: always
-    logging:
-      driver: journald
-
-  indexer-chronos-process:
-    restart: always
-    logging:
-      driver: journald
-
   indexer-eventprovider-process:
     restart: always
     logging:
