@@ -23,13 +23,3 @@ services:
     restart: always
     logging:
       driver: journald
-
-  indexer-eventprovider-process:
-    restart: always
-    logging:
-      driver: journald
-
-  indexer-eventprovider-api:
-    restart: always
-    logging:
-      driver: journald

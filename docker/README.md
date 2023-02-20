@@ -103,15 +103,22 @@ mongosh eventProviderV2 --eval "db.system.find().pretty()"
 This stack contains the Market Maker components. It will run:
 * Injective Market Maker API components (exchange API, exchange process, event provider API, event provider process)
 
-First run the the event provider
+You can either run your own event provider service or point to our events endpoint. 
+
+To use our events endpoint set these environment variables on your `.env` file
 ```bash
-docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans indexer-eventprovider-process indexer-eventprovider-api
+INDEXER_DB_EVENTPROVIDER_ENDPOINT=https://k8s.mainnet.events.grpc-web.injective.network
+INDEXER_DB_EVENTPROVIDER_GRPC_ADDRESS=https://k8s.mainnet.events.grpc.injective.network
+```
+To run your own event provider service, run the commands below:
+```bash
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml -f addons/docker-compose.dex.yaml up -d --remove-orphans indexer-eventprovider-process indexer-eventprovider-api
 ```
 Wait until the event provider has finished syncing. You can check its progress and see if it has completed syncing by running:
 ```bash
 sudo docker logs indexer-eventprovider-process | grep "initial sync completed"
 ```
-Now you can run the rest of the Market Maker stack
+Once you've setup or pointed to an event provider, you can run the rest of the Market Maker stack
 ```bash
 docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans indexer-exchange-process indexer-exchange-api
 ```
