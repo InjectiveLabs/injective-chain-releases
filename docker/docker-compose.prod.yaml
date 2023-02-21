@@ -4,6 +4,8 @@ services:
 
   mongo:
     restart: always
+    logging:
+      driver: journald
 
   injective-core:
     restart: always
