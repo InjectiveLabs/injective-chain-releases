@@ -349,3 +349,55 @@ services:
           memory: 4G
     networks:
       - injective
+  indexer-web3gw-api:
+    container_name: indexer-web3gw-api
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${WEB3GW_APP_VERSION}
+    restart: always
+    command: injective-indexer web3gw-api
+    logging:
+      driver: journald
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    hostname: ${HOSTNAME}
+    environment:
+      # universal
+      INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_ENV: ${APP_ENV}
+      INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
+      # bugsnag
+      APP_ENV: ${APP_ENV}
+      APP_VERSION: ${WEB3GW_APP_VERSION}
+      LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
+      LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
+      ## statsd
+      INDEXER_STATSD_AGENT: ${INDEXER_STATSD_AGENT}
+      INDEXER_STATSD_PREFIX: indexer-web3gw-api
+      INDEXER_STATSD_ADDR: host.docker.internal:8125
+      INDEXER_STATSD_STUCK_DUR: 5m
+      INDEXER_STATSD_MOCKING: ${INDEXER_STATSD_MOCKING}
+      INDEXER_STATSD_DISABLED: ${INDEXER_STATSD_DISABLED}
+      ## pprof
+      INDEXER_PPROF_ENABLED: "false"
+      INDEXER_PPROF_ADDR: "0.0.0.0:6060"
+      # cmd specific
+      ## cosmos
+      INDEXER_TENDERMINT_RPC: ${INDEXER_TENDERMINT_RPC}
+      INDEXER_COSMOS_GRPC: ${INDEXER_COSMOS_GRPC}
+      INDEXER_COSMOS_CHAIN_ID: ${CHAIN_ID}
+      INDEXER_FEE_PAYER_PK: ${EXCHANGE_FEE_PAYER_PK}
+      INDEXER_GAS_ADJUSTMENT_COEF: 1.5
+      ## service
+      INDEXER_GRPC_LISTEN_ADDR: 0.0.0.0:9910
+      INDEXER_HTTP_LISTEN_ADDR: 0.0.0.0:4444
+      INDEXER_HTTP_TLS_CERT: /apps/data/public.crt
+      INDEXER_HTTP_TLS_KEY:  /apps/data/private.key
+    ports:
+      - 4448:4444
+      - 9914:9910
+      - 6078:6060
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    networks:
+      - injective
