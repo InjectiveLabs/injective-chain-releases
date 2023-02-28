@@ -12,6 +12,10 @@ services:
     command: mongod --dbpath /data/db --replSet rs0 --port 27017 --bind_ip 0.0.0.0
     ports:
       - 127.0.0.1:27017:27017
+    deploy:
+      resources:
+        limits:
+          memory: ${MONGO_RAM_LIMIT}
     networks:
       - injective
     volumes:
