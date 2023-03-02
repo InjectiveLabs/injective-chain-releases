@@ -1,6 +1,6 @@
 # Injective Chain releases
 
-The repository hosts Injective Chain releases of binary artifacts.
+This repository hosts Injective Chain releases of binary artifacts.
 
 It also contains hassle-free guides and scripts for getting started and managing Injective Chain nodes.
 
@@ -9,8 +9,10 @@ It also contains hassle-free guides and scripts for getting started and managing
 * [Injective Exchange Service Setup Guide](https://www.notion.so/Injective-Exchange-Service-Setup-Guide-7e59980634d54991862300670583d46a) (Includes Running a Node)
 * [Create a new node and join the network](guides/new-node.md)
 * [Sync node from the snapshot](guides/sync-node.md) (quickest way to sync blocks).
-* [Sync node from scratch via public sentries](guides/sync-node.md) (better decentralization factor).
 * [Upgrade Node to the latest version](guides/upgrade-node.md)
+
+# * [Sync node from scratch via public sentries](guides/sync-node.md) (better decentralization factor).
+
 
 ## Requirements
 
@@ -18,7 +20,7 @@ The following requirements are required to run the node natively.
 
 ### Hardware
 
-The following table shows the recommended hardware requirements for the running node on the mainnet.
+The following table shows the minimum recommended hardware requirements for the running node on the mainnet.
 
 | Validator Node   | Sentry Node    |
 | -----------------| ---------------|
