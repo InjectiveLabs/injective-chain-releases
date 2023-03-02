@@ -8,10 +8,10 @@ It also contains hassle-free guides and scripts for getting started and managing
 
 * [Injective Exchange Service Setup Guide](https://www.notion.so/Injective-Exchange-Service-Setup-Guide-7e59980634d54991862300670583d46a) (Includes Running a Node)
 * [Create a new node and join the network](guides/new-node.md)
-* [Sync node from the snapshot](guides/sync-node.md) (quickest way to sync blocks).
+* [Sync node from a snapshot](guides/sync-node.md) (quickest way to sync blocks).
 * [Upgrade Node to the latest version](guides/upgrade-node.md)
 
-# * [Sync node from scratch via public sentries](guides/sync-node.md) (better decentralization factor).
+<!-- * [Sync node from scratch via public sentries](guides/sync-node.md) (better decentralization factor). -->
 
 
 ## Requirements
