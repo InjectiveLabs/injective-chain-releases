@@ -2,8 +2,6 @@
 
 set -e
 
-make install
-
 killall injectived &>/dev/null || true
 rm -rf ~/.injectived
 
