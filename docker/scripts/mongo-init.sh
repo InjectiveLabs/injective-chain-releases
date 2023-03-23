@@ -25,7 +25,7 @@ else
 fi
 
 if [ ! -f explorerV2 ]; then
-    echo "exchangeV2 not found skipping..."
+    echo "explorerV2 not found skipping..."
 else
     echo "explorerV2 found, importing"
     mongorestore --uri="mongodb://localhost:27017" --gzip --archive=explorerV2 --nsInclude=explorerV2.* -v
