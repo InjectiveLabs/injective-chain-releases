@@ -91,6 +91,13 @@ chronos_sync() {
   fi
 }
 
+explorer_sync() {
+  if is_sync_on $SYNC_EXPLORER_SNAPSHOT; then
+    echo "Sync explorer snapshot"
+    aws s3 --no-sign-request sync --delete s3://injective-snapshots/$NETWORK/explorerV2 $VOLUMES_PATH/explorerV2
+  fi
+}
+
 injectived_start_testnet() {
   export GIT_TAG=$GIT_TESTNET_TAG
   export GIT_NETWORK_CONFIG=$TESTNET_CONFIG
@@ -143,6 +150,7 @@ injectived_start() {
   event_provider_sync
   exchange_sync
   chronos_sync
+  explorer_sync
   injectived_clean_working_dir
 }
 
