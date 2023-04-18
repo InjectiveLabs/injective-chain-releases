@@ -36,12 +36,12 @@ links found here. https://tendermint.com/security/
 Alternately you can also notify us of a security issue through, [Discord](https://discord.gg/injective) or Telegram, and
 alert the core engineers:
 
-|           | Telegram        | Discord                           |
-|-----------|-----------------|-----------------------------------|
-| Albert    | `@albertchon`   | `Albert &#124; Injective#9999`    |
-| Bojan     | `@bangjelkoski` | `Bojan Angjelkoski#7621`          |
-| Achilleas | `@achilleas_k`  | `Achilleas &#124; Injective#1596` |
-| Markus    | `@markuswaas`   | `Markus Waas#2536`                |
+|           | Telegram        | Discord                         |
+|-----------|-----------------|---------------------------------|
+| Albert    | `@albertchon`   | Albert &#124; Injective#9999    |
+| Bojan     | `@bangjelkoski` | Bojan Angjelkoski#7621          |
+| Achilleas | `@achilleas_k`  | Achilleas &#124; Injective#1596 |
+| Markus    | `@markuswaas`   | Markus Waas#2536                |
 
 ### Coordinated Vulnerability Disclosure Policy
 
