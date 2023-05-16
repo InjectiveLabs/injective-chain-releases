@@ -9,7 +9,7 @@ services:
     container_name: mongo
     image: mongo:5.0.5
     restart: always
-    command: mongod --dbpath /data/db --replSet rs0 --port 27017 --bind_ip 0.0.0.0
+    command: mongod --dbpath /data/db --replSet rs0 --port 27017 --bind_ip 0.0.0.0 --wiredTigerCacheSizeGB ${MONGO_WIREDTIGER_CACHE_GB}
     ports:
       - 127.0.0.1:27017:27017
     deploy:

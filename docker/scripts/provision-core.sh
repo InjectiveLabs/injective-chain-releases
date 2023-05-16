@@ -72,7 +72,7 @@ injectived_sync() {
 
 event_provider_sync() {
   if is_sync_on $SYNC_EVENT_PROVIDER_SNAPSHOT; then
-    echo "Sync exchange snapshot"
+    echo "Sync eventProvider snapshot"
     aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/mongo/eventProviderV2 $VOLUMES_PATH/mongo/eventProviderV2
   fi
 }
