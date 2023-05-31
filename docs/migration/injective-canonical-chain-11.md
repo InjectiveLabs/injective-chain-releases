@@ -62,7 +62,7 @@ In the event that the upgrade does not succeed, validators and operators must re
 ## Upgrade Procedure
 Validator operators should configure the **timeout_commit** in **config.toml** to `300ms`.
 
-You must remove the wasm cache before upgrading to the new version (.injectived/wasm/wasm/cache/).
+You must remove the wasm cache before upgrading to the new version (rm -rf .injectived/wasm/wasm/cache/).
 
 1. Verify you are currently running the correct version (`b578d018c`) of `injectived`:
    ```bash
