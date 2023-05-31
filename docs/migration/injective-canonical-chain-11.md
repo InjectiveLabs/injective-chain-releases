@@ -99,7 +99,7 @@ Validator operators should configure the **timeout_commit** in **config.toml** t
    ```
    The binary will perform the upgrade automatically and continue the next consensus round if everything goes well.
 
-6. Verify you are currently running the correct version (`5868c94`) of `peggo` after downloading the v1.10 release:
+6. Verify you are currently running the correct version (`5868c94`) of `peggo` after downloading the v1.11 release:
   ```bash
    peggo version
    Version dev (5868c94)
