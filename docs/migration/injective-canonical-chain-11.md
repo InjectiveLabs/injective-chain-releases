@@ -62,6 +62,8 @@ In the event that the upgrade does not succeed, validators and operators must re
 ## Upgrade Procedure
 Validator operators should configure the **timeout_commit** in **config.toml** to `300ms`.
 
+You must remove the wasm cache before upgrading to the new version (rm -rf .injectived/wasm/wasm/cache/).
+
 1. Verify you are currently running the correct version (`b578d018c`) of `injectived`:
    ```bash
    injectived version
@@ -99,7 +101,7 @@ Validator operators should configure the **timeout_commit** in **config.toml** t
    ```
    The binary will perform the upgrade automatically and continue the next consensus round if everything goes well.
 
-6. Verify you are currently running the correct version (`5868c94`) of `peggo` after downloading the v1.10 release:
+6. Verify you are currently running the correct version (`5868c94`) of `peggo` after downloading the v1.11 release:
   ```bash
    peggo version
    Version dev (5868c94)
