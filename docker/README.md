@@ -120,7 +120,7 @@ sudo docker logs indexer-eventprovider-process | grep "initial sync completed"
 ```
 Once you've setup or pointed to an event provider, you can run the rest of the Market Maker stack
 ```bash
-docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --remove-orphans indexer-exchange-process indexer-exchange-api
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml -f addons/docker-compose.dex.yaml up -d --remove-orphans indexer-exchange-process indexer-exchange-api
 ```
 Wait until the exchange has finished syncing. You can check its progress and see if it has completed syncing by running the command below.
 ```bash
@@ -149,19 +149,19 @@ docker compose -f logs
 ## Restart the Network
 
 ```
-docker compose -f docker-compose.yaml -f docker-compose.prod.yaml restart
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml -f addons/docker-compose.dex.yaml restart
 ```
 
 ## Stop the Network
 
 ```
-docker compose -f docker-compose.yaml -f docker-compose.prod.yaml stop
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml -f addons/docker-compose.dex.yaml stop
 ```
 
 ## Down all the containers and delete the network
 
 ```
-docker compose -f docker-compose.yaml -f docker-compose.prod.yaml down
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml -f addons/docker-compose.dex.yaml down
 ```
 
 # Using the Makefile
