@@ -22,6 +22,7 @@ services:
       - ./volumes/mongo:/data/db
       - ./volumes/mongo/eventProviderV2:/eventProviderV2
       - ./volumes/mongo/exchangeV2:/exchangeV2
+      - ./volumes/mongo/explorerV2:/explorerV2
       - ./scripts/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
 
   injective-core:
