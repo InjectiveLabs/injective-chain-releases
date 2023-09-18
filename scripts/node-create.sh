@@ -32,7 +32,7 @@ get_latest_binary() {
 # Init node
 injectived_init_node() {
   # the Injective Chain has a chain-id of "injective-1"
-  injectived init $MONIKER --chain-id $CHAIN_ID
+  injectived init $MONIKER --chain-id $CHAIN_ID -o
 }
 
 injectived_configure() {
