@@ -17,7 +17,7 @@ get_latest_binary() {
 
 # Init node
 injectived_init_node() {
-  injectived init $MONIKER --chain-id $CHAIN_ID --home $INJ_HOME
+  injectived init $MONIKER --chain-id $CHAIN_ID --home $INJ_HOME -o
 }
 
 injectived_configure() {
