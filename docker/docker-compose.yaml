@@ -54,6 +54,7 @@ services:
       - 9900:9900
       - 9091:9091
       - 10337:10337
+      - 9999:9999
     deploy:
       resources:
         limits:
