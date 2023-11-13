@@ -47,6 +47,7 @@ services:
         --rpc.laddr "tcp://0.0.0.0:26657" \
         --statsd-address=statsd.injective.dev:8125 \
         --statsd-enabled=true \
+        ${INJ_CORE_CMD_STREAM_API} \
         start
     ports:
       - 26656:26656
