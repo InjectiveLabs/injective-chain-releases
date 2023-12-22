@@ -76,7 +76,7 @@ services:
 
   indexer-exchange-import:
     container_name: indexer-exchange-import
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXCHANGE_APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXCHANGE_IMPORT_VERSION}
     pull_policy: always
     command: injective-indexer exchange-import
     logging:
@@ -123,7 +123,7 @@ services:
 
   indexer-exchange-process:
     container_name: indexer-exchange-process
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXCHANGE_APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXCHANGE_PROCESS_VERSION}
     pull_policy: always
     restart: always
     command: injective-indexer exchange-process
@@ -194,7 +194,7 @@ services:
 
   indexer-exchange-api:
     container_name: indexer-exchange-api
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXCHANGE_APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXCHANGE_API_VERSION}
     pull_policy: always
     restart: always
     command: injective-indexer exchange-api

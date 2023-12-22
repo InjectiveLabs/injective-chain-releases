@@ -3,7 +3,7 @@ version: '3.9'
 services:
   indexer-chronos-process:
     container_name: indexer-chronos-process
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${CHRONOS_APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${CHRONOS_PROCESS_VERSION}
     pull_policy: always
     restart: always
     command: injective-indexer chronos-process
@@ -71,7 +71,7 @@ services:
 
   indexer-chronos-api:
     container_name: indexer-chronos-api
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${CHRONOS_APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${CHRONOS_API_VERSION}
     pull_policy: always
     restart: always
     command: injective-indexer chronos-api
@@ -127,7 +127,7 @@ services:
 
   indexer-explorer-process:
     container_name: indexer-explorer-process
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXPLORER_APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXPLORER_PROCESS_VERSION}
     restart: always
     command: injective-indexer explorer-process
     logging:
@@ -185,7 +185,7 @@ services:
 
   indexer-explorer-api:
     container_name: indexer-explorer-api
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXPLORER_APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXPLORER_API_VERSION}
     restart: always
     command: injective-indexer explorer-api
     logging:
@@ -240,7 +240,7 @@ services:
 
   indexer-eventprovider-process:
     container_name: indexer-eventprovider-process
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EVENTPROVIDER_APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EVENTPROVIDER_PROCESS_VERSION}
     pull_policy: always
     restart: always
     command: injective-indexer eventprovider-process
@@ -292,7 +292,7 @@ services:
 
   indexer-eventprovider-api:
     container_name: indexer-eventprovider-api
-    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EVENTPROVIDER_APP_VERSION}
+    image: public.ecr.aws/l9h3g6c6/injective-indexer:${EVENTPROVIDER_API_VERSION}
     pull_policy: always
     restart: always
     command: injective-indexer eventprovider-api
