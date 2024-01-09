@@ -62,7 +62,7 @@ services:
       INDEXER_GRPC_LISTEN_ADDR: 0.0.0.0:4444
       INDEXER_HTTP_TLS_CERT: /apps/data/public.crt
       INDEXER_HTTP_TLS_KEY: /apps/data/private.key
-      INDEXER_HTTP_HORACLE_ADDR: https://k8s.global.mainnet.horacle.injective.network/height/latest
+      INDEXER_HTTP_HORACLE_ADDR: ${INDEXER_HTTP_HORACLE_ADDR}
       INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD: 10
       INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD: 60
     ports:
@@ -189,7 +189,7 @@ services:
       INDEXER_GRPC_LISTEN_ADDR: 0.0.0.0:4444
       INDEXER_HTTP_TLS_CERT: /apps/data/public.crt
       INDEXER_HTTP_TLS_KEY: /apps/data/private.key
-      INDEXER_HTTP_HORACLE_ADDR: https://k8s.global.mainnet.horacle.injective.network/height/latest
+      INDEXER_HTTP_HORACLE_ADDR: ${INDEXER_HTTP_HORACLE_ADDR}
       INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD: 10
       INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD: 60
     ports:
