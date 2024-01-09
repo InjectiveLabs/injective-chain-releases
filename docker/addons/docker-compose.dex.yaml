@@ -68,7 +68,7 @@ services:
     ports:
       - 5500:5500
       - 6073:6060
-      - 19912:9910
+      - 19913:9910
       - 14445:4445
     deploy:
       resources:
@@ -311,8 +311,8 @@ services:
       INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD: 60
     ports:
       - 6069:6060
-      - 10013:9910
-      - 4547:4444
+      - 19912:9910
+      - 14443:4444
     deploy:
       resources:
         limits:
