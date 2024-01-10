@@ -48,6 +48,7 @@ services:
         --statsd-address=statsd.injective.dev:8125 \
         --statsd-enabled=true \
         ${INJ_CORE_CMD_STREAM_API} \
+        --wasm.memory_cache_size ${WASM_MEM_CACHE_SIZE} \
         start
     ports:
       - 26656:26656
