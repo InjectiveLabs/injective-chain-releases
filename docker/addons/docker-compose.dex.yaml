@@ -58,8 +58,6 @@ services:
       INDEXER_CHRONOS_LEADERBOARD_CUSTOM_RES: ${INDEXER_CHRONOS_LEADERBOARD_CUSTOM_RES}
       INDEXER_VOLUME_SINGLE_SIDE_HEIGHT: ${INDEXER_VOLUME_SINGLE_SIDE_HEIGHT}
 
-      INDEXER_HTTP_LISTEN_ADDR: 0.0.0.0:4444
-      INDEXER_GRPC_LISTEN_ADDR: 0.0.0.0:9910
       INDEXER_HTTP_TLS_CERT: /apps/data/public.crt
       INDEXER_HTTP_TLS_KEY: /apps/data/private.key
       INDEXER_HTTP_HORACLE_ADDR: ${INDEXER_HTTP_HORACLE_ADDR}
@@ -68,8 +66,6 @@ services:
     ports:
       - 5500:5500
       - 6073:6060
-      - 19913:9910
-      - 14445:4444
     deploy:
       resources:
         limits:
