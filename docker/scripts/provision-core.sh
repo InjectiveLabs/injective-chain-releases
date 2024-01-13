@@ -11,7 +11,7 @@ install_tools() {
 get_latest_binary() {
   wget $GIT_RELEASE_REPO/$GIT_TAG/$RELEASE_ARCH
   unzip -o $RELEASE_ARCH
-  mv -f injectived peggo injective-exchange /usr/bin
+  mv -f injectived peggo /usr/bin
   mv -f libwasmvm.x86_64.so /usr/lib
 }
 
