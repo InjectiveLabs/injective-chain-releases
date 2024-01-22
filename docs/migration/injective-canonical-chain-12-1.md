@@ -4,6 +4,8 @@
 
 This is a non-consensus breaking release, node operators can upgrade in their earliest convenience.
 
+Network downtime will not occur during this upgrade.
+
 All nodes, validator and non-consensus nodes must be upgraded as soon as possible to this version.
 
 Validators should also upgrade the peggo version.
