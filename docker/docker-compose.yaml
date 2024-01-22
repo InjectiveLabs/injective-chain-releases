@@ -75,6 +75,28 @@ services:
       retries: 5
       start_period: 1s
 
+  sentry-sidecar:
+    container_name: sentry-sidecar
+    image: public.ecr.aws/l9h3g6c6/sentry-sidecar:${SIDECAR_IMAGE_VERSION}
+    restart: always
+    networks:
+      - injective
+    pull_policy: always
+    env_file:
+      - .env
+    extra_hosts:
+        - "host.docker.internal:host-gateway"
+    environment:
+      HEALTH_BLOCK_DIFF: ${SIDECAR_HEALTH_BLOCK_DIFF}
+      HORACLE_URL: ${INDEXER_HTTP_HORACLE_ADDR}
+      SENTRY_URL: ${SIDECAR_SENTRY_URL}
+      SYNC_TIME_DELTA: ${SIDECAR_SYNC_TIME_DELTA}
+      SENTRY_WATCHER_INTERVAL: ${SIDECAR_SENTRY_WATCHER_INTERVAL}
+      LISTEN_ADDRESS: ${SIDECAR_LISTEN_ADDRESS}
+      LISTEN_PORT: ${SIDECAR_LISTEN_PORT}
+    ports:
+      - 8888:${SIDECAR_LISTEN_PORT}
+
   indexer-exchange-import:
     container_name: indexer-exchange-import
     image: public.ecr.aws/l9h3g6c6/injective-indexer:${EXCHANGE_IMPORT_VERSION}
