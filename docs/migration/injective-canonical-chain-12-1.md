@@ -40,7 +40,7 @@ Docker images have support for both `amd64` and `arm64` architectures.
 ### 🕊️ Download Binaries
 
 ```bash
-wget https://github.com/InjectiveLabs/injective-chain-releases/releases/download/PLACEHOLDER/linux-amd64.zip
+wget https://github.com/InjectiveLabs/injective-chain-releases/releases/download/v1.12.1-1705909076/linux-amd64.zip
 unzip linux-amd64.zip
 sudo mv injectived peggo /usr/bin
 sudo mv libwasmvm.x86_64.so /usr/lib
