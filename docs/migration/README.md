@@ -12,3 +12,7 @@ This directory contains major upgrade migration instructions.
 - [Upgrading from `injective-canonical-chain-6` to `injective-canonical-chain-7`](injective-canonical-chain-7.md)
 - [Upgrading from `injective-canonical-chain-7` to `injective-canonical-chain-8`](injective-canonical-chain-8.md)
 - [Upgrading from `injective-canonical-chain-8` to `injective-canonical-chain-9`](injective-canonical-chain-9.md)
+- [Upgrading from `injective-canonical-chain-9` to `injective-canonical-chain-10`](injective-canonical-chain-10.md)
+- [Upgrading from `injective-canonical-chain-10` to `injective-canonical-chain-11`](injective-canonical-chain-11.md)
+- [Upgrading from `injective-canonical-chain-11` to `injective-canonical-chain-12`](injective-canonical-chain-12.md)
+- [Upgrading from `injective-canonical-chain-12` to `injective-canonical-chain-12-1`](injective-canonical-chain-12-1.md)
