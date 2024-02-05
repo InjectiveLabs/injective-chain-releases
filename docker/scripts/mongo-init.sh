@@ -21,7 +21,7 @@ if [ ! -f eventProviderV2Pruned ]; then
     echo "eventProviderV2Pruned not found skipping..."
 else
     echo "eventProviderV2Pruned found, importing"
-    mongorestore --uri="mongodb://localhost:27017" --gzip --archive=eventProviderV2Pruned -nsFrom=eventProviderV2Pruned.* --nsTo=eventProviderV2.* -v && rm eventProviderV2Pruned
+    mongorestore --uri="mongodb://localhost:27017" --gzip --archive=eventProviderV2Pruned --nsFrom=eventProviderV2Pruned.* --nsTo=eventProviderV2.* -v && rm eventProviderV2Pruned
 fi
 
 if [ ! -f exchangeV2 ]; then
