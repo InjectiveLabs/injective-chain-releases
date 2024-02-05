@@ -73,28 +73,48 @@ injectived_sync() {
 event_provider_sync() {
   if is_sync_on $SYNC_EVENT_PROVIDER_SNAPSHOT; then
     echo "Sync eventProvider snapshot"
-    aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/mongo/eventProviderV2 $VOLUMES_PATH/mongo/eventProviderV2
+    if [ "$NETWORK" == "mainnet" ]; then
+      if [ "$SYNC_EVENT_PROVIDER_SNAPSHOT_TYPE" == "pruned" ]; then
+        aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/weekly/mongo/eventProviderV2Pruned $VOLUMES_PATH/dumps/eventProviderV2
+      else
+        aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/mongo/eventProviderV2 $VOLUMES_PATH/dumps/eventProviderV2
+      fi
+    else
+      aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/daily/mongo/eventProviderV2 $VOLUMES_PATH/dumps/eventProviderV2
+    fi
   fi
 }
 
 exchange_sync() {
   if is_sync_on $SYNC_EXCHANGE_SNAPSHOT; then
     echo "Sync exchange snapshot"
-    aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/mongo/exchangeV2 $VOLUMES_PATH/mongo/exchangeV2
+    if [ "$NETWORK" == "mainnet" ]; then
+      aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/weekly/mongo/exchangeV2 $VOLUMES_PATH/dumps/exchangeV2
+    else
+      aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/daily/mongo/exchangeV2 $VOLUMES_PATH/dumps/exchangeV2
+    fi
   fi
 }
 
 chronos_sync() {
   if is_sync_on $SYNC_CHRONOS_SNAPSHOT; then
     echo "Sync chronos snapshot"
-    aws s3 --no-sign-request sync --delete s3://injective-snapshots/$NETWORK/chronos $VOLUMES_PATH/chronos
+    if [ "$NETWORK" == "mainnet" ]; then
+      aws s3 --no-sign-request sync --delete s3://injective-snapshots/$NETWORK/weekly/chronos $VOLUMES_PATH/chronos
+    else
+      aws s3 --no-sign-request sync --delete s3://injective-snapshots/$NETWORK/daily/chronos $VOLUMES_PATH/chronos
+    fi
   fi
 }
 
 explorer_sync() {
   if is_sync_on $SYNC_EXPLORER_SNAPSHOT; then
     echo "Sync explorer snapshot"
-    aws s3 --no-sign-request sync --delete s3://injective-snapshots/$NETWORK/explorerV2 $VOLUMES_PATH/explorerV2
+    if [ "$NETWORK" == "mainnet" ]; then
+      aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/weekly/mongo/explorerV2 $VOLUMES_PATH/dumps/explorerV2
+    else
+      aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/daily/mongo/explorerV2 $VOLUMES_PATH/dumps/explorerV2
+    fi
   fi
 }
 
