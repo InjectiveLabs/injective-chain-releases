@@ -52,6 +52,7 @@ injectived_set_working_dir() {
 }
 
 injectived_clean_working_dir() {
+  chmod o+w $VOLUMES_PATH/dumps/*
   rm -rf $HOME/.injectived-artifacts
   echo "### Provisioning Finished. Cleaning... ###"
 }
