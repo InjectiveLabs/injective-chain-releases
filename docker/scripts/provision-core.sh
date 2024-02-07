@@ -75,7 +75,7 @@ event_provider_sync() {
     echo "Sync eventProvider snapshot"
     if [ "$NETWORK" == "mainnet" ]; then
       if [ "$SYNC_EVENT_PROVIDER_SNAPSHOT_TYPE" == "pruned" ]; then
-        aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/weekly/mongo/eventProviderV2Pruned $VOLUMES_PATH/dumps/eventProviderV2
+        aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/weekly/mongo/eventProviderV2Pruned $VOLUMES_PATH/dumps/eventProviderV2Pruned
       else
         aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/mongo/eventProviderV2 $VOLUMES_PATH/dumps/eventProviderV2
       fi
