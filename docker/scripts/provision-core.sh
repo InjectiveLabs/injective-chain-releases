@@ -61,7 +61,7 @@ injectived_sync() {
   if is_sync_on $SYNC_CORE_SNAPSHOT; then
     echo "Sync injective core snapshot"
     if [ "$NETWORK" == "mainnet" ]; then
-      SNAP=$(aws s3 ls s3://injective-snapshots/mainnet/weekly/injectived/ | grep ".tar.lz4" | awk '{print $4}' | sort | head -n 1)
+      SNAP=$(aws s3 ls --no-sign-request s3://injective-snapshots/mainnet/weekly/injectived/ | grep ".tar.lz4" | awk '{print $4}' | sort | head -n 1)
       aws s3 cp --no-sign-request s3://injective-snapshots/mainnet/weekly/injectived/$SNAP .
       lz4 -c -d $SNAP  | tar -x -C $INJ_HOME
     else
