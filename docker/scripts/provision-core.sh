@@ -61,9 +61,9 @@ injectived_sync() {
   if is_sync_on $SYNC_CORE_SNAPSHOT; then
     echo "Sync injective core snapshot"
     if [ "$NETWORK" == "mainnet" ]; then
-      URL=$(curl -L https://quicksync.io/injective.json | jq -r '.[] |select(.file=="injective-1-pruned")|.url')
-      aria2c -x5 $URL
-      lz4 -d $(basename $URL) | tar xf - -C $INJ_HOME
+      SNAP=$(aws s3 ls s3://injective-snapshots/mainnet/weekly/injectived/ | grep ".tar.lz4" | awk '{print $4}' | sort | head -n 1)
+      aws s3 cp s3://injective-snapshots/mainnet/pruned/$SNAP .
+      lz4 -c -d $SNAP  | tar -x -C $INJ_HOME
     else
       aws s3 sync --no-sign-request --delete s3://injective-snapshots/$NETWORK/injectived/data $INJ_HOME/data
       aws s3 sync --no-sign-request --delete s3://injective-snapshots/$NETWORK/injectived/wasm $INJ_HOME/wasm
