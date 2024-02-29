@@ -45,6 +45,7 @@ services:
         --rpc.laddr "tcp://0.0.0.0:26657" \
         --statsd-address=${INJ_STATSD_ADDRESS} \
         --statsd-enabled=${INJ_STATSD_ENABLED} \
+        --statsd-agent=${INJ_STATSD_AGENT} \
         ${INJ_CORE_CMD_STREAM_API} \
         --wasm.memory_cache_size ${WASM_MEM_CACHE_SIZE} \
         start
