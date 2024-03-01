@@ -15,6 +15,7 @@ if [ ! -f eventProviderV2 ]; then
 else
     echo "eventProviderV2 found, importing"
     mongorestore --uri="mongodb://localhost:27017" --gzip --archive=eventProviderV2 --nsInclude=eventProviderV2.* -v
+    rm eventProviderV2 || true
 fi
 
 if [ ! -f eventProviderV2Pruned ]; then
@@ -22,6 +23,7 @@ if [ ! -f eventProviderV2Pruned ]; then
 else
     echo "eventProviderV2Pruned found, importing"
     mongorestore --uri="mongodb://localhost:27017" --gzip --archive=eventProviderV2Pruned --nsFrom=eventProviderV2Pruned.* --nsTo=eventProviderV2.* -v
+    rm eventProviderV2Pruned || true
 fi
 
 if [ ! -f exchangeV2 ]; then
@@ -29,6 +31,7 @@ if [ ! -f exchangeV2 ]; then
 else
     echo "exchangeV2 found, importing"
     mongorestore --uri="mongodb://localhost:27017" --gzip --archive=exchangeV2 --nsInclude=exchangeV2.* -v
+    rm exchangeV2 || true
 fi
 
 if [ ! -f explorerV2 ]; then
@@ -36,4 +39,5 @@ if [ ! -f explorerV2 ]; then
 else
     echo "explorerV2 found, importing"
     mongorestore --uri="mongodb://localhost:27017" --gzip --archive=explorerV2 --nsInclude=explorerV2.* -v
+    rm explorerV2 || true
 fi
