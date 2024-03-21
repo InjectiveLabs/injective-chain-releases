@@ -417,6 +417,7 @@ services:
       INDEXER_HTTP_LISTEN_ADDR: 0.0.0.0:4444
       INDEXER_HTTP_TLS_CERT: /apps/data/public.crt
       INDEXER_HTTP_TLS_KEY:  /apps/data/private.key
+      INDEXER_WEB3GW_HTTP_HEALTH_CHECK_ENDPOINT: ${INDEXER_WEB3GW_HTTP_HEALTH_CHECK_ENDPOINT}
     ports:
       - 4448:4444
       - 9914:9910
