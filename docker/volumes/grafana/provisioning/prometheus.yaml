@@ -5,6 +5,6 @@ global:
 scrape_configs:
   - job_name: "cosmops"
     static_configs:
-      - targets: ["localhost:26660"]
+      - targets: ["injective-core:26660"]
         labels:
           group: "cosmops"
