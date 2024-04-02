@@ -6,6 +6,7 @@ services:
     extra_hosts:
      - "host.docker.internal:host-gateway"
     restart: unless-stopped
+    network_mode: host
     environment: 
       GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION: "true"
       GF_AUTH_ANONYMOUS_ENABLED: "true"
@@ -13,15 +14,10 @@ services:
       GF_AUTH_DISABLE_SIGNOUT_MENU: "true"
       GF_AUTH_DISABLE_LOGIN_FORM: "true"
     user: '0'
-    ports:
-      - '3000:3000'
-    # adding the mount volume point which we create earlier
     volumes:
       - ./volumes/grafana:/var/lib/grafana
       - ./volumes/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./volumes/grafana/dashboards/:/var/lib/grafana/dashboards # Make sure your JSON file is in the ./dashboards directory
-    networks:
-      - injective
     
   prometheus:
     container_name: prometheus
