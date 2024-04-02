@@ -1,0 +1,9 @@
+apiVersion: 1
+
+providers:
+  - name: "Injective" # Name of the dashboard provider
+    orgId: 1
+    folder: ""
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards
