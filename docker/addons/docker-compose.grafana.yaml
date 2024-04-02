@@ -3,6 +3,8 @@ services:
   grafana:
     image: grafana/grafana
     container_name: grafana
+    extra_hosts:
+     - "host.docker.internal:host-gateway"
     restart: unless-stopped
     environment: 
       GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION: "true"
@@ -10,8 +12,6 @@ services:
       GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
       GF_AUTH_DISABLE_SIGNOUT_MENU: "true"
       GF_AUTH_DISABLE_LOGIN_FORM: "true"
-    # if you are running as root then set it to 0
-    # else find the right id with the id -u command
     user: '0'
     ports:
       - '3000:3000'
@@ -20,5 +20,21 @@ services:
       - ./volumes/grafana:/var/lib/grafana
       - ./volumes/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./volumes/grafana/dashboards/:/var/lib/grafana/dashboards # Make sure your JSON file is in the ./dashboards directory
+    networks:
+      - injective
+    
+  prometheus:
+    container_name: prometheus
+    extra_hosts:
+     - "host.docker.internal:host-gateway"
+    image: prom/prometheus:latest
+    command:
+      - --config.file=/etc/prometheus.yaml
+      - --web.enable-remote-write-receiver
+      - --enable-feature=exemplar-storage
+    volumes:
+      - ./volumes/grafana/provisioning/dashboards/prometheus.yaml:/etc/prometheus.yaml
+    ports:
+      - 9090:9090
     networks:
       - injective
