@@ -33,7 +33,7 @@ services:
       - --web.enable-remote-write-receiver
       - --enable-feature=exemplar-storage
     volumes:
-      - ./volumes/grafana/provisioning/dashboards/prometheus.yaml:/etc/prometheus.yaml
+      - ./volumes/grafana/provisioning/prometheus.yaml:/etc/prometheus.yaml
     ports:
       - 9090:9090
     networks:
