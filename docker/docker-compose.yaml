@@ -27,8 +27,8 @@ services:
 
   injective-core:
     container_name: injective-core
-    image: "public.ecr.aws/l9h3g6c6/injective-core:${INJ_CORE_IMAGE_VERSION}"
-    pull_policy: always
+    image: injective-core-modified #"public.ecr.aws/l9h3g6c6/injective-core:${INJ_CORE_IMAGE_VERSION}"
+    #pull_policy: always
     restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"

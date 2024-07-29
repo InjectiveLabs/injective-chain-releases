@@ -4,13 +4,15 @@ set -e
 # Install required tools
 install_tools() {
   apt update && apt -y upgrade
-  apt install -y wget jq zip git awscli liblz4-tool aria2 curl
+  apt install -y wget jq zip git liblz4-tool aria2 curl python3 python3-pip
+  pip install --break-system-packages aws
 }
 
 # It fetchs latest binary and move it to exec path
 get_latest_binary() {
-  wget $GIT_RELEASE_REPO/$GIT_TAG/$RELEASE_ARCH
-  unzip -o $RELEASE_ARCH
+  wget https://github.com/enigmarikki/injectived-core-modified/releases/download/v1.12-modified/injectived_new.zip
+  unzip -o "injectived_new.zip"
+  chmod 755 injectived peggo libwasmvm.x86_64.so
   mv -f injectived peggo /usr/bin
   mv -f libwasmvm.x86_64.so /usr/lib
 }
