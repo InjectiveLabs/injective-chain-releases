@@ -107,6 +107,7 @@ services:
       INDEXER_PPROF_ENABLED: "false"
       INDEXER_PPROF_ADDR: "0.0.0.0:6060"
       # cmd specific
+      ASSET_SERVICE_GRPC_ADDRESS: ${ASSET_SERVICE_GRPC_ADDRESS}
       ## chronos
       INDEXER_CHRONOS_RPC_ADDR: tcp://indexer-chronos-process:5500
       INDEXER_COSMOS_TLS_ENABLED: ${INDEXER_COSMOS_TLS_ENABLED}
