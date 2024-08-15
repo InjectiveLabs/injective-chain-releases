@@ -16,7 +16,7 @@ Validators should also upgrade the peggo version.
 | injectived  | v1.13.1   |XXXX|
 | peggo  | v1.13.1   |XXXX|
 
-`Go version 1.19`
+`Go version 1.22`
 
 Verify you're using the correct version by running the below commands:
 ```bash
