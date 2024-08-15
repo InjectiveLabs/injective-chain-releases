@@ -13,8 +13,8 @@ Validators should also upgrade the peggo version.
 
 | Binary    | Version |Commit Hash
 | -------- | ------- |------- |
-| injectived  | v1.13.2   |XXXX|
-| peggo  | v1.13.0   |XXXX|
+| injectived  | v1.13.2   |6f57bf030ab772b5374a0647efa9e4565582ad42|
+| peggo  | v1.13.0   |ead1119207cf23498e0f2b46343d060f01e7b353|
 
 `Go version 1.22`
 
@@ -41,7 +41,7 @@ Docker images have support for both `amd64` and `arm64` architectures.
 ### 🕊️ Download Binaries
 
 ```bash
-wget https://github.com/InjectiveLabs/injective-chain-releases/releases/download/v1.13.2-XXXXX/linux-amd64.zip
+wget https://github.com/InjectiveLabs/injective-chain-releases/releases/download/v1.13.2-1723753267/linux-amd64.zip
 unzip linux-amd64.zip
 sudo mv injectived peggo /usr/bin
 sudo mv libwasmvm.x86_64.so /usr/lib
