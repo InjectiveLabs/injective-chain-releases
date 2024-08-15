@@ -14,7 +14,7 @@ Validators should also upgrade the peggo version.
 | Binary    | Version |Commit Hash
 | -------- | ------- |------- |
 | injectived  | v1.13.2   |XXXX|
-| peggo  | v1.13.2   |XXXX|
+| peggo  | v1.13.0   |XXXX|
 
 `Go version 1.22`
 
@@ -26,7 +26,7 @@ peggo version
 
 ```bash
 docker run public.ecr.aws/l9h3g6c6/injective-core:v1.13.2 injectived version
-docker run public.ecr.aws/l9h3g6c6/peggo:v1.13.2 peggo version
+docker run public.ecr.aws/l9h3g6c6/peggo:v1.13.0 peggo version
 ```
 
 ### 🐳 Docker
@@ -36,7 +36,7 @@ Docker images have support for both `amd64` and `arm64` architectures.
 | Image    | Description |
 | -------- | ------- |
 | public.ecr.aws/l9h3g6c6/injective-core:v1.13.2 | Debian image |
-| public.ecr.aws/l9h3g6c6/peggo:v1.13.2 | Alpine image |
+| public.ecr.aws/l9h3g6c6/peggo:v1.13.0 | Alpine image |
 
 ### 🕊️ Download Binaries
 
