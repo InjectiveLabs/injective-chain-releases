@@ -50,6 +50,7 @@ services:
         --statsd-tracing-enabled=false \
         --statsd-profiling-enabled=false \
         --wasm.memory_cache_size ${WASM_MEM_CACHE_SIZE} \
+        --wasm.query_gas_limit ${WASM_QUERY_GAS_LIMIT} \
         start
     ports:
       - 26656:26656
