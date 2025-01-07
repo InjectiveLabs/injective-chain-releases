@@ -1,4 +1,4 @@
-cversion: '3.9'
+version: '3.9'
 
 services:
   indexer-chronos-process:
@@ -131,6 +131,7 @@ services:
       # Soon to be deprecated horacle env vars
       INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD: ${INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD}
       INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD: ${INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD}
+      INDEXER_EXCHANGE_RPC_ADDR: ${INDEXER_EXCHANGE_RPC_ADDR}
     ports:
       - 4445:4445
       - 6074:6060
@@ -195,7 +196,6 @@ services:
       INDEXER_GRPC_LISTEN_ADDR: 0.0.0.0:9910
       INDEXER_HTTP_TLS_CERT: /apps/data/public.crt
       INDEXER_HTTP_TLS_KEY: /apps/data/private.key
-      INDEXER_COSMOS_LCD_URL: ${INDEXER_COSMOS_LCD_URL}
       INDEXER_HTTP_HORACLE_ADDR: ${INDEXER_HTTP_HORACLE_ADDR}
       INDEXER_HTTP_EP_ADDR: ${INDEXER_HTTP_EP_ADDR}
       INDEXER_HEALTH_BLOCKDIFF_THRESHOLD: ${INDEXER_HEALTH_BLOCKDIFF_THRESHOLD}
@@ -203,6 +203,7 @@ services:
       # Soon to be deprecated horacle env vars
       INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD: ${INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD}
       INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD: ${INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD}
+      INDEXER_COSMOS_LCD_URL: ${INDEXER_COSMOS_LCD_URL}
     ports:
       - 6075:6060
       - 19911:9910
@@ -406,7 +407,6 @@ services:
           memory: 4G
     networks:
       - injective
-
   indexer-web3gw-api:
     container_name: indexer-web3gw-api
     image: public.ecr.aws/l9h3g6c6/injective-indexer:${WEB3GW_APP_VERSION}
