@@ -160,14 +160,14 @@ yes $PASSPHRASE | injectived add-genesis-account --chain-id $CHAINID $(injective
 
 echo "Signing genesis transaction"
 # Sign genesis transaction
-yes $PASSPHRASE | injectived gentx genesis 1000000000000000000000inj --chain-id $CHAINID
+yes $PASSPHRASE | injectived genesis gentx genesis 1000000000000000000000inj --chain-id $CHAINID
 
 echo "Collecting genesis transaction"
 # Collect genesis tx
-yes $PASSPHRASE | injectived collect-gentxs
+yes $PASSPHRASE | injectived genesis collect-gentxs
 
 echo "Validating genesis"
 # Run this to ensure everything worked and that the genesis file is setup correctly
-injectived validate-genesis
+injectived genesis validate
 
 echo "Setup done!"
