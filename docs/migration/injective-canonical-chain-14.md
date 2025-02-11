@@ -3,7 +3,7 @@
 ## Upgrade Guide
 
 
-This is a software upgrade proposal for Injective. If passed, [Proposal <proposal_num>](https://hub.injective.network/proposal/<proposal_num>/) would commit the Injective Chain to halt at block [106340000](https://www.mintscan.io/injective/blocks/106320000) (approximately 15:00 UTC on Monday February 17 2025) and resume with the v1.14.0 version of the application binary.
+This is a software upgrade proposal for Injective. If passed, [Proposal 494](https://hub.injective.network/proposals/494/) would commit the Injective Chain to halt at block [106315000](https://www.mintscan.io/injective/blocks/106315000) (approximately 14:00 UTC on Monday February 17 2025) and resume with the v1.14.0 version of the application binary.
 
 Validators can find a step-by-step guide on the upgrade procedure in the long-form [proposal](https://docs.injective.network/nodes/validators/mainnet/canonical-chain-upgrade/canonical-1.14.0).
 
