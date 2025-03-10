@@ -29,3 +29,6 @@ build
 # Environment
 .env
 .env.local
+
+# Docker
+docker/volumes/dumps/
