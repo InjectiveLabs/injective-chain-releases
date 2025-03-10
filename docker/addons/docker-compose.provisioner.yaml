@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   provisioner:
+    platform: linux/amd64
     container_name: injective-provisioner
     image: ubuntu:${UBUNTU_VERSION}
     command: [ "bash", "/home/ubuntu/scripts/provision-core.sh" ]
