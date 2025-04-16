@@ -1,4 +1,4 @@
-# Injective v1.14.1 Upgrade 🥷
+# Injective v1.15.0 Upgrade 🥷
 
 ## Upgrade Guide
 
