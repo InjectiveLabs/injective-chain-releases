@@ -25,3 +25,10 @@ build
 .idea/
 *.iml
 .root/
+
+# Environment
+.env
+.env.local
+
+# Docker
+docker/volumes/dumps/
