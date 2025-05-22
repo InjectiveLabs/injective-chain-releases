@@ -51,6 +51,7 @@ services:
         --statsd-profiling-enabled=false \
         --wasm.memory_cache_size ${WASM_MEM_CACHE_SIZE} \
         --wasm.query_gas_limit ${WASM_QUERY_GAS_LIMIT} \
+        ${INJ_CORE_JSON_RPC_FLAGS} \
         start
     ports:
       - 26656:26656
