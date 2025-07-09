@@ -11,17 +11,30 @@ services:
     restart: always
     command: mongod --dbpath /data/db --replSet rs0 --port 27017 --bind_ip 0.0.0.0 --wiredTigerCacheSizeGB ${MONGO_WIREDTIGER_CACHE_GB}
     ports:
-      - 127.0.0.1:27017:27017
+    - 127.0.0.1:27017:27017
     deploy:
       resources:
         limits:
           memory: ${MONGO_RAM_LIMIT}
     networks:
-      - injective
+    - injective
     volumes:
-      - ./volumes/mongo:/data/db
-      - ./volumes/dumps:/dumps
-      - ./scripts/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+    - ./volumes/mongo:/data/db
+    - ./volumes/dumps:/dumps
+    - ./scripts/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+
+  mongo-exporter:
+    image: bitnami/mongodb-exporter:0.40.0
+    container_name: mongo-exporter
+    restart: always
+    environment:
+      MONGODB_URI: mongodb://mongo:27017
+    ports:
+    - 9216:9216
+    depends_on:
+    - mongo
+    networks:
+    - injective
 
   injective-core:
     container_name: injective-core
@@ -29,39 +42,39 @@ services:
     pull_policy: always
     restart: always
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+    - "host.docker.internal:host-gateway"
     environment:
       APP_ENV: ${APP_ENV}
       APP_VERSION: ${APP_VERSION}
       LOG_BUGSNAG_KEY: ${LOG_BUGSNAG_KEY}
       LOG_BUGSNAG_ENABLED: ${LOG_BUGSNAG_ENABLED}
     command:
-      - /bin/sh
-      - -c
-      - |
-        ulimit -n 120000
-        yes 12345678 | injectived \
-        --log-level=${LOG_LEVEL} \
-        --rpc.laddr "tcp://0.0.0.0:26657" \
-        --statsd-address=${INJ_STATSD_ADDRESS} \
-        --statsd-enabled=${INJ_STATSD_ENABLED} \
-        --statsd-agent=${INJ_STATSD_AGENT} \
-        ${INJ_CORE_CMD_STREAM_API} \
-        --statsd-tracing-enabled=false \
-        --statsd-profiling-enabled=false \
-        --wasm.memory_cache_size ${WASM_MEM_CACHE_SIZE} \
-        --wasm.query_gas_limit ${WASM_QUERY_GAS_LIMIT} \
-        ${INJ_CORE_JSON_RPC_FLAGS} \
-        start
+    - /bin/sh
+    - -c
+    - |
+      ulimit -n 120000
+      yes 12345678 | injectived \
+      --log-level=${LOG_LEVEL} \
+      --rpc.laddr "tcp://0.0.0.0:26657" \
+      --statsd-address=${INJ_STATSD_ADDRESS} \
+      --statsd-enabled=${INJ_STATSD_ENABLED} \
+      --statsd-agent=${INJ_STATSD_AGENT} \
+      ${INJ_CORE_CMD_STREAM_API} \
+      --statsd-tracing-enabled=false \
+      --statsd-profiling-enabled=false \
+      --wasm.memory_cache_size ${WASM_MEM_CACHE_SIZE} \
+      --wasm.query_gas_limit ${WASM_QUERY_GAS_LIMIT} \
+      ${INJ_CORE_JSON_RPC_FLAGS} \
+      start
     ports:
-      - 26656:26656
-      - 26657:26657
-      - 9900:9900
-      - 9091:9091
-      - 10337:10337
-      - 9999:9999
-      - 8545:8545
-      - 8546:8546
+    - 26656:26656
+    - 26657:26657
+    - 9900:9900
+    - 9091:9091
+    - 10337:10337
+    - 9999:9999
+    - 8545:8545
+    - 8546:8546
     deploy:
       resources:
         limits:
@@ -69,10 +82,10 @@ services:
         reservations:
           memory: ${INJ_CORE_STACK_RESOURCE_RAM_RESEVATION}
     networks:
-      - injective
+    - injective
     volumes:
-      - ./volumes/.injectived:/root/.injectived
-      - ./scripts:/home/ubuntu/scripts
+    - ./volumes/.injectived:/root/.injectived
+    - ./scripts:/home/ubuntu/scripts
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://injective-core:26657" ]
       interval: 60s
@@ -85,12 +98,12 @@ services:
     image: public.ecr.aws/l9h3g6c6/sentry-sidecar:${SIDECAR_IMAGE_VERSION}
     restart: always
     networks:
-      - injective
+    - injective
     pull_policy: always
     env_file:
-      - .env
+    - .env
     extra_hosts:
-        - "host.docker.internal:host-gateway"
+    - "host.docker.internal:host-gateway"
     environment:
       HEALTH_BLOCK_DIFF: ${SIDECAR_HEALTH_BLOCK_DIFF}
       HORACLE_URL: ${INDEXER_HTTP_HORACLE_ADDR}
@@ -100,7 +113,7 @@ services:
       LISTEN_ADDRESS: ${SIDECAR_LISTEN_ADDRESS}
       LISTEN_PORT: ${SIDECAR_LISTEN_PORT}
     ports:
-      - 8888:${SIDECAR_LISTEN_PORT}
+    - 8888:${SIDECAR_LISTEN_PORT}
 
   indexer-exchange-import:
     container_name: indexer-exchange-import
@@ -110,7 +123,7 @@ services:
     logging:
       driver: journald
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+    - "host.docker.internal:host-gateway"
     hostname: ${HOSTNAME}
     environment:
       # universal
@@ -148,9 +161,9 @@ services:
         limits:
           memory: 4G
     networks:
-      - injective
+    - injective
     volumes:
-      - ~/.injectived/config:/root/.injectived/config
+    - ~/.injectived/config:/root/.injectived/config
 
   indexer-exchange-process:
     container_name: indexer-exchange-process
@@ -161,7 +174,7 @@ services:
     logging:
       driver: journald
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+    - "host.docker.internal:host-gateway"
     hostname: ${HOSTNAME}
     environment:
       # universal
@@ -234,17 +247,17 @@ services:
       INDEXER_HEALTH_TIMEDIFF_THRESHOLD: 60
       # Soon to be deprecated horacle health vars
       INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD: 30
-      INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD:  60
+      INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD: 60
     ports:
-      - 6071:6060
-      - 19910:19910
-      - 14444:4444
+    - 6071:6060
+    - 19910:19910
+    - 14444:4444
     deploy:
       resources:
         limits:
           memory: ${INDEXER_EXCHANGE_PROCESS_MEMORY_LIMIT}
     networks:
-      - injective
+    - injective
 
   indexer-exchange-api:
     container_name: indexer-exchange-api
@@ -255,7 +268,7 @@ services:
     logging:
       driver: journald
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+    - "host.docker.internal:host-gateway"
     hostname: ${HOSTNAME}
     environment:
       # universal
@@ -306,14 +319,14 @@ services:
       INDEXER_HEALTH_TIMEDIFF_THRESHOLD: 60
       # Soon to be deprecated horacle health vars
       INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD: 30
-      INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD:  60
+      INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD: 60
     ports:
-      - 4444:4444
-      - 9910:9910
-      - 6072:6060
+    - 4444:4444
+    - 9910:9910
+    - 6072:6060
     deploy:
       resources:
         limits:
           memory: ${INDEXER_EXCHANGE_API_MEMORY_LIMIT}
     networks:
-      - injective
+    - injective
