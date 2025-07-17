@@ -2,19 +2,15 @@
 
 ### Standard Priority Bug
 
-For a bug that is non-sensitive and/or operational in nature rather than a critical vulnerability, please add it as a
-GitHub issue.
+For a bug that is non-sensitive and/or operational in nature rather than a critical vulnerability, please add it as a GitHub issue.
 
 ### Critical bug or security issue
 
 Please report critical security vulnerabilities to
-**[security@injectivelabs.org](mailto:security@injectivelabs.org)**.  *Please avoid opening a public issue on the
+**[security@injective.foundation](mailto:security@injective.foundation)**.  *Please avoid opening a public issue on the
 repository for critical security issues.*
 
-The Injective Labs team will send a response indicating the next steps in handling your
-report. After the initial reply to your report, the team will keep you informed
-of the progress towards remediation and may ask for additional
-information or guidance.
+The Injective Foundation team will send a response indicating the next steps in handling your report. After the initial reply to your report, the team will keep you informed of the progress towards remediation and may ask for additional information or guidance.
 
 In addition, please include the following information along with your report:
 
@@ -26,12 +22,11 @@ In addition, please include the following information along with your report:
 - Whether this vulnerability is public or known to third parties. If it is, please provide details.
 
 If you believe that an existing (public) issue is a critical-security-related issue, please email *
-*[security@injectivelabs.org](mailto:security@injectivelabs.org)**. The email should include the issue ID and
+*[security@injective.foundation](mailto:security@injective.foundation)**. The email should include the issue ID and
 a short description of why it should be handled according to this critical security
 policy.
 
-If you have found an issue with the Cosmos SDK or Tendermint modules not found in this repo you can report them through
-links found here. https://tendermint.com/security/
+If you have found an issue with the Cosmos SDK or CometBFT, please report them on [HackerOne](https://hackerone.com/cosmos)
 
 Alternately you can also notify us of a security issue through, [Discord](https://discord.gg/injective) or Telegram, and
 alert the core engineers:
