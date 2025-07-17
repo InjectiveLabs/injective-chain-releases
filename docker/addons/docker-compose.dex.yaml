@@ -17,6 +17,7 @@ services:
     environment:
       # universal
       INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_LOG_FORMAT: ${LOG_FORMAT}
       #${LOG_LEVEL}
       INDEXER_ENV: ${APP_ENV}
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
@@ -96,6 +97,7 @@ services:
     environment:
       # universal
       INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_LOG_FORMAT: ${LOG_FORMAT}
       INDEXER_ENV: ${APP_ENV}
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
@@ -158,6 +160,7 @@ services:
     environment:
       # universal
       INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_LOG_FORMAT: ${LOG_FORMAT}      
       INDEXER_ENV: ${APP_ENV}
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
@@ -235,6 +238,7 @@ services:
     environment:
       # universal
       INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_LOG_FORMAT: ${LOG_FORMAT}
       INDEXER_ENV: ${APP_ENV}
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
@@ -299,6 +303,7 @@ services:
     environment:
       # universal
       INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_LOG_FORMAT: ${LOG_FORMAT}
       INDEXER_ENV: ${APP_ENV}
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
@@ -368,6 +373,7 @@ services:
     environment:
       # universal
       INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_LOG_FORMAT: ${LOG_FORMAT}
       INDEXER_ENV: ${APP_ENV}
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
@@ -433,6 +439,7 @@ services:
     environment:
       # universal
       INDEXER_LOG_LEVEL: ${LOG_LEVEL}
+      INDEXER_LOG_FORMAT: ${LOG_FORMAT}
       INDEXER_ENV: ${APP_ENV}
       INDEXER_SERVICE_WAIT_TIMEOUTEVEL: 1m
       # bugsnag
