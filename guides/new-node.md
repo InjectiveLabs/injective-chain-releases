@@ -6,6 +6,6 @@ To set up a new node and join Equinox testnet, follow the official guide [join t
 
 If you need help, join our [Discord community][discord-community-link]
 
-[join-testnet-link]: https://docs.injective.network/nodes/RunNode/testnet
-[join-mainnet-link]: https://docs.injective.network/nodes/RunNode/mainnet
+[join-testnet-link]: https://docs.injective.network/nodes/validators/testnet
+[join-mainnet-link]: https://docs.injective.network/nodes/validators/mainnet
 [discord-community-link]: https://discord.com/invite/injective
