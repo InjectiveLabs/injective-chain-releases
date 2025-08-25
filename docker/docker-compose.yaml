@@ -67,6 +67,7 @@ services:
       ${INJ_CORE_JSON_RPC_FLAGS} \
       start
     ports:
+    - 26660:26660
     - 26656:26656
     - 26657:26657
     - 9900:9900
