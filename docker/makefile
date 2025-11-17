@@ -34,6 +34,10 @@ follow-chronos-api:
 	docker logs indexer-chronos-api -f
 follow-chronos-process:
 	docker logs indexer-chronos-process -f
+follow-chart-api:
+	docker logs indexer-chart-api -f
+follow-chart-process:
+	docker logs indexer-chart-process -f
 follow-exchange-api:
 	docker logs indexer-exchange-api -f
 follow-exchange-process:

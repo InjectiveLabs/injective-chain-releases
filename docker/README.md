@@ -9,7 +9,7 @@ These instructions will guide you in running a dockerized version of the Injecti
 
 # Prerequisites
 
-**Hardware Requirments**
+**Hardware Requirements**
 
 | Minimum          | Recommendation |
 | -----------------| ---------------|
@@ -18,7 +18,7 @@ These instructions will guide you in running a dockerized version of the Injecti
 | Network: 5Gbps+  | Network: 5Gbps+|
 
 
-**Software Requirments**
+**Software Requirements**
 
 * [Docker Version 20.X.X](get-docker-link)
 * [docker compose version 2.11.X](get-compose-link)
