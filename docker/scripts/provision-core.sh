@@ -119,6 +119,17 @@ explorer_sync() {
   fi
 }
 
+chart_sync() {
+  if is_sync_on $SYNC_CHART_SNAPSHOT; then
+    echo "Sync chart snapshot"
+    if [ "$NETWORK" == "mainnet" ]; then
+      aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/weekly/mongo/chart $VOLUMES_PATH/dumps/chart
+    else
+      aws s3 cp --no-sign-request s3://injective-snapshots/$NETWORK/daily/mongo/chart $VOLUMES_PATH/dumps/chart
+    fi
+  fi
+}
+
 injectived_start_testnet() {
   export GIT_TAG=$GIT_TESTNET_TAG
   export GIT_NETWORK_CONFIG=$TESTNET_CONFIG
