@@ -212,8 +212,8 @@ services:
       INDEXER_HTTP_HORACLE_BLOCK_THRESHOLD: 30
       INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD:  60
     ports:
-      - 4445:4445
-      - 6074:6060
+      - 4447:4445
+      - 6077:6060
     deploy:
       resources:
         limits:
@@ -272,8 +272,8 @@ services:
       INDEXER_HTTP_HORACLE_TIMESTAMP_THRESHOLD:  60
       INDEXER_EXCHANGE_RPC_ADDR: ${INDEXER_EXCHANGE_RPC_ADDR}
     ports:
-      - 4445:4445
-      - 6074:6060
+      - 4449:4445
+      - 6079:6060
     deploy:
       resources:
         limits:
