@@ -183,6 +183,7 @@ injectived_start() {
   exchange_sync
   chronos_sync
   explorer_sync
+  chart_sync
   injectived_clean_working_dir
 }
 
