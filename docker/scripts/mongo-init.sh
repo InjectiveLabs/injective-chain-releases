@@ -41,3 +41,11 @@ else
     mongorestore --uri="mongodb://localhost:27017" --gzip --archive=explorerV2 --nsInclude=explorerV2.* -v
     rm explorerV2 || true
 fi
+
+if [ ! -f chart ]; then
+    echo "chart not found skipping..."
+else
+    echo "chart found, importing"
+    mongorestore --uri="mongodb://localhost:27017" --gzip --archive=chart --nsInclude=chart.* -v
+    rm chart || true
+fi
